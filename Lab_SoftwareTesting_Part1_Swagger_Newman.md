@@ -85,7 +85,7 @@
 
 **Swagger แก้ปัญหานี้ด้วยการเป็น "Single Source of Truth":**
 
-![Swagger Single Source of Truth](images/swagger-architect.png)
+![Swagger Single Source of Truth](images/swagger-architech.png)
 
 ---
 
