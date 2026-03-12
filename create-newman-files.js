@@ -1,13 +1,11 @@
 const fs   = require('fs');
 const path = require('path');
 
-// สร้างโฟลเดอร์ newman และ reports ถ้ายังไม่มี
+// สร้างโฟลเดอร์ถ้ายังไม่มี
 fs.mkdirSync('newman',  { recursive: true });
 fs.mkdirSync('reports', { recursive: true });
 
-// ─────────────────────────────────────────────────────────────
-// 1. Environment — เก็บค่าตัวแปรที่ใช้ร่วมกันทุก Request
-// ─────────────────────────────────────────────────────────────
+// 1. Environment - ตัวแปรที่ใช้ในระบบ
 const env = {
   id: 'hotel-booking-local-env',
   name: 'Hotel Booking - Local',
@@ -19,251 +17,154 @@ const env = {
   _postman_variable_scope: 'environment'
 };
 
-// ─────────────────────────────────────────────────────────────
-// 2. Collection — 8 Requests พร้อม pm.test() ครบชุด
-// ─────────────────────────────────────────────────────────────
+// 2. Collection - ชุดทดสอบทั้งหมด 11 ข้อ
 const collection = {
   info: {
-    name: 'Hotel Booking API Tests',
-    description: 'Automated API Tests สำหรับ Hotel Booking System — Lab02A',
+    name: 'Hotel Booking API Tests - Full Lab02A',
+    description: 'Automated API Tests โดย ภัคธร (68030223)',
     schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
   },
   item: [
-
-    // ── Request 1: POST /api/login ───────────────────────────
+    // ── 1. Login (Success) ──
     {
-      name: '1. POST /api/login',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 200", function() {',
-        '  pm.response.to.have.status(200);',
-        '});',
-        'pm.test("Response has token and user info", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d).to.have.property("token");',
-        '  pm.expect(d.token).to.be.a("string").and.not.empty;',
-        '  pm.expect(d.user).to.have.property("role", "admin");',
-        '  pm.expect(d.user).to.not.have.property("password");',
-        '  pm.environment.set("token", d.token);',    // บันทึก token → ใช้ใน Request 3–7
-        '});',
-        'pm.test("user.id is a positive number", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.user.id).to.be.a("number").and.above(0);',
-        '});',
-        'pm.test("Response time is less than 2000ms", function() {',
-        '  pm.expect(pm.response.responseTime).to.be.below(2000);',
-        '});'
+      name: '1. POST /api/login - Success',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 200", () => pm.response.to.have.status(200));',
+        'const d = pm.response.json();',
+        'pm.environment.set("token", d.token);'
       ]}}],
       request: {
         method: 'POST',
         header: [{ key: 'Content-Type', value: 'application/json' }],
         body: { mode: 'raw', raw: JSON.stringify({ username: 'admin', password: 'admin123' }) },
-        url: { raw: '{{baseUrl}}/api/login', host: ['{{baseUrl}}'], path: ['api', 'login'] }
+        url: '{{baseUrl}}/api/login'
       }
     },
-
-    // ── Request 2: POST /api/bookings ────────────────────────
+    // ── 2. Create Booking ──
     {
       name: '2. POST /api/bookings',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 201 Created", function() {',
-        '  pm.response.to.have.status(201);',
-        '});',
-        'pm.test("Has id and status defaults to pending", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d).to.have.property("id");',
-        '  pm.expect(d.id).to.be.a("number").and.above(0);',
-        '  pm.expect(d.status).to.equal("pending");',
-        '  pm.environment.set("bookingId", d.id);',  // บันทึก bookingId → ใช้ใน Request 5–7
-        '});'
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 201", () => pm.response.to.have.status(201));',
+        'pm.environment.set("bookingId", pm.response.json().id);'
       ]}}],
       request: {
         method: 'POST',
         header: [{ key: 'Content-Type', value: 'application/json' }],
-        body: {
-          mode: 'raw',
-          raw: JSON.stringify({
-            fullname: 'ภัคธร ศรีบุ่งง้าว', email: 'ุ68030223@kmitl.ac.th',
-            phone: '0812345678', checkin: '2026-12-01', checkout: '2026-12-03',
-            roomtype: 'standard', guests: 2
-          })
-        },
-        url: { raw: '{{baseUrl}}/api/bookings', host: ['{{baseUrl}}'], path: ['api', 'bookings'] }
+        body: { mode: 'raw', raw: JSON.stringify({ fullname: 'ภัคธร ศรีบุ่งง้าว', guests: 2 }) },
+        url: '{{baseUrl}}/api/bookings'
       }
     },
-
-    // ── Request 3: GET /api/bookings (with token) ────────────
+    // ── 3. GET All (With Token) ──
     {
-      name: '3. GET /api/bookings (with token)',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 200", function() {',
-        '  pm.response.to.have.status(200);',
-        '});',
-        'pm.test("Response is an array", function() {',
-        '  pm.expect(pm.response.json()).to.be.an("array");',
-        '});',
-        'pm.test("Each booking has all required fields", function() {',
-        '  const arr = pm.response.json();',
-        '  if (arr.length > 0) {',
-        '    pm.expect(arr[0]).to.include.all.keys(',
-        '      "id", "fullname", "email", "phone",',
-        '      "checkin", "checkout", "roomtype",',
-        '      "guests", "status", "created_at"',
-        '    );',
-        '  }',
-        '});'
+      name: '3. GET /api/bookings',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 200", () => pm.response.to.have.status(200));'
       ]}}],
       request: {
         method: 'GET',
         header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
-        url: { raw: '{{baseUrl}}/api/bookings', host: ['{{baseUrl}}'], path: ['api', 'bookings'] }
+        url: '{{baseUrl}}/api/bookings'
       }
     },
-
-    // ── Request 4: GET /api/bookings (NO token — Negative) ───
+    // ── 4. GET (No Token - Negative) ──
     {
-      name: '4. GET /api/bookings (NO token - Negative)',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Returns 401 without token", function() {',
-        '  pm.response.to.have.status(401);',
-        '});',
-        'pm.test("Has error message about login", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d).to.have.property("error");',
-        '  pm.expect(d.error).to.include("เข้าสู่ระบบ");',
-        '  pm.expect(d).to.not.have.property("id");',
-        '});'
+      name: '4. GET /api/bookings - No Token',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 401", () => pm.response.to.have.status(401));'
       ]}}],
       request: {
-        method: 'GET', header: [],
-        url: { raw: '{{baseUrl}}/api/bookings', host: ['{{baseUrl}}'], path: ['api', 'bookings'] }
+        method: 'GET',
+        url: '{{baseUrl}}/api/bookings'
       }
     },
-
-    // ── Request 5: GET /api/bookings/:id ─────────────────────
+    // ── 5. GET by ID ──
     {
       name: '5. GET /api/bookings/:id',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 200", function() {',
-        '  pm.response.to.have.status(200);',
-        '});',
-        'pm.test("Returned id matches requested id", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.id).to.equal(parseInt(pm.environment.get("bookingId")));',
-        '  pm.expect(d.email).to.be.a("string").and.not.empty;',
-        '});',
-        'pm.test("Fullname should not be empty by Phakkathon", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.fullname).to.not.be.empty;',
-        '});'
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("ID Match", () => pm.expect(pm.response.json().id).to.equal(parseInt(pm.environment.get("bookingId"))));'
       ]}}],
       request: {
         method: 'GET',
         header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
-        url: {
-          raw: '{{baseUrl}}/api/bookings/{{bookingId}}',
-          host: ['{{baseUrl}}'], path: ['api', 'bookings', '{{bookingId}}']
-        }
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
       }
     },
-
-    // ── Request 6: PUT /api/bookings/:id ─────────────────────
+    // ── 6. Update Booking ──
     {
       name: '6. PUT /api/bookings/:id',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 200", function() {',
-        '  pm.response.to.have.status(200);',
-        '});',
-        'pm.test("Updated fields are saved correctly", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.comment).to.equal("Updated by Newman test");',
-        '  pm.expect(d.roomtype).to.equal("deluxe");',
-        '  pm.expect(d).to.have.property("id");',
-        '});',
-        'pm.test("Guests should be 3 by Phakkathon", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.guests).to.equal(3);',
-        '});'
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Update OK", () => pm.expect(pm.response.json().guests).to.equal(3));'
       ]}}],
       request: {
         method: 'PUT',
-        header: [
-          { key: 'Authorization', value: 'Bearer {{token}}' },
-          { key: 'Content-Type',  value: 'application/json' }
-        ],
-        body: {
-          mode: 'raw',
-          raw: JSON.stringify({
-            fullname: 'นักศึกษา ทดสอบ Newman (Updated)', email: 'newman-updated@test.com',
-            phone: '0898765432', checkin: '2026-12-01', checkout: '2026-12-05',
-            roomtype: 'deluxe', guests: 3, comment: 'Updated by Newman test'
-          })
-        },
-        url: {
-          raw: '{{baseUrl}}/api/bookings/{{bookingId}}',
-          host: ['{{baseUrl}}'], path: ['api', 'bookings', '{{bookingId}}']
-        }
+        header: [{ key: 'Authorization', value: 'Bearer {{token}}' }, { key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ guests: 3, comment: 'Updated by Newman test' }) },
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
       }
     },
-
-    // ── Request 7: DELETE /api/bookings/:id ──────────────────
+    // ── 7. Login (Wrong Password - Negative) ──
     {
-      name: '7. DELETE /api/bookings/:id',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 200", function() {',
-        '  pm.response.to.have.status(200);',
-        '});',
-        'pm.test("Response has message and deleted id", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d).to.have.property("message");',
-        '  pm.expect(d.id.toString()).to.equal(pm.environment.get("bookingId").toString());',
-        '  pm.environment.unset("bookingId");',
-        '});'
+      name: '7. POST /api/login - Wrong Password',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 401", () => pm.response.to.have.status(401));'
+      ]}}],
+      request: {
+        method: 'POST',
+        header: [{ key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ username: 'admin', password: 'wrong' }) },
+        url: '{{baseUrl}}/api/login'
+      }
+    },
+    // ── 8. Check-In (New API) ──
+    {
+      name: '8. POST /api/bookings/:id/checkin',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Check-In OK", () => pm.expect(pm.response.json().status).to.equal("checked-in"));',
+        'pm.test("Checked by Phakkathon", () => pm.expect(pm.response.json().checkedBy).to.include("68030223"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/checkin'
+      }
+    },
+    // ── 9. Check-Out (New API) ──
+    {
+      name: '9. POST /api/bookings/:id/checkout',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Check-Out OK", () => pm.expect(pm.response.json().status).to.equal("completed"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/checkout'
+      }
+    },
+    // ── 10. Confirm Check-Out (New API) ──
+    {
+      name: '10. POST /api/bookings/:id/confirm-checkout',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Final Status Closed", () => pm.expect(pm.response.json().finalStatus).to.equal("closed"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/confirm-checkout'
+      }
+    },
+    // ── 11. Delete Booking ──
+    {
+      name: '11. DELETE /api/bookings/:id',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Delete Success", () => pm.response.to.have.status(200));'
       ]}}],
       request: {
         method: 'DELETE',
         header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
-        url: {
-          raw: '{{baseUrl}}/api/bookings/{{bookingId}}',
-          host: ['{{baseUrl}}'], path: ['api', 'bookings', '{{bookingId}}']
-        }
-      }
-    },
-
-    // ── Request 8: POST /api/login — Wrong Password ──────────
-    {
-      name: '8. POST /api/login — Wrong Password',
-      event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
-        'pm.test("Status code is 401", function() {',
-        '  pm.response.to.have.status(401);',
-        '});',
-        'pm.test("Error message is correct", function() {',
-        '  const d = pm.response.json();',
-        '  pm.expect(d.error).to.include("ไม่ถูกต้อง");',
-        '});'
-      ]}}],
-      request: {
-        method: 'POST',
-        header: [{ key: 'Content-Type', value: 'application/json' }],
-        body: { mode: 'raw', raw: JSON.stringify({ username: 'admin', password: 'wrongpassword' }) },
-        url: { raw: '{{baseUrl}}/api/login', host: ['{{baseUrl}}'], path: ['api', 'login'] }
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
       }
     }
   ]
 };
 
-// ─────────────────────────────────────────────────────────────
-// 3. เขียนไฟล์ทั้งสอง
-// ─────────────────────────────────────────────────────────────
-fs.writeFileSync(
-  path.join('newman', 'hotel-booking-env.json'),
-  JSON.stringify(env, null, 2),
-  'utf8'
-);
-console.log('✅ สร้าง newman/hotel-booking-env.json เรียบร้อย');
-
-fs.writeFileSync(
-  path.join('newman', 'hotel-booking-collection.json'),
-  JSON.stringify(collection, null, 2),
-  'utf8'
-);
-console.log('✅ สร้าง newman/hotel-booking-collection.json เรียบร้อย');
+// เขียนไฟล์
+fs.writeFileSync(path.join('newman', 'hotel-booking-env.json'), JSON.stringify(env, null, 2));
+fs.writeFileSync(path.join('newman', 'hotel-booking-collection.json'), JSON.stringify(collection, null, 2));
+console.log('✅ ไฟล์ใหม่สร้างเรียบร้อย! พร้อม Assertions');

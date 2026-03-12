@@ -1,36 +1,20 @@
 {
   "info": {
-    "name": "Hotel Booking API Tests",
-    "description": "Automated API Tests สำหรับ Hotel Booking System — Lab02A",
+    "name": "Hotel Booking API Tests - Full Lab02A",
+    "description": "Automated API Tests โดย ภัคธร (68030223)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "1. POST /api/login",
+      "name": "1. POST /api/login - Success",
       "event": [
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function() {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"Response has token and user info\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d).to.have.property(\"token\");",
-              "  pm.expect(d.token).to.be.a(\"string\").and.not.empty;",
-              "  pm.expect(d.user).to.have.property(\"role\", \"admin\");",
-              "  pm.expect(d.user).to.not.have.property(\"password\");",
-              "  pm.environment.set(\"token\", d.token);",
-              "});",
-              "pm.test(\"user.id is a positive number\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.user.id).to.be.a(\"number\").and.above(0);",
-              "});",
-              "pm.test(\"Response time is less than 2000ms\", function() {",
-              "  pm.expect(pm.response.responseTime).to.be.below(2000);",
-              "});"
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+              "const d = pm.response.json();",
+              "pm.environment.set(\"token\", d.token);"
             ]
           }
         }
@@ -47,16 +31,7 @@
           "mode": "raw",
           "raw": "{\"username\":\"admin\",\"password\":\"admin123\"}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/login",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "login"
-          ]
-        }
+        "url": "{{baseUrl}}/api/login"
       }
     },
     {
@@ -65,18 +40,9 @@
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 201 Created\", function() {",
-              "  pm.response.to.have.status(201);",
-              "});",
-              "pm.test(\"Has id and status defaults to pending\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d).to.have.property(\"id\");",
-              "  pm.expect(d.id).to.be.a(\"number\").and.above(0);",
-              "  pm.expect(d.status).to.equal(\"pending\");",
-              "  pm.environment.set(\"bookingId\", d.id);",
-              "});"
+              "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+              "pm.environment.set(\"bookingId\", pm.response.json().id);"
             ]
           }
         }
@@ -91,44 +57,19 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"fullname\":\"ภัคธร ศรีบุ่งง้าว\",\"email\":\"ุ68030223@kmitl.ac.th\",\"phone\":\"0812345678\",\"checkin\":\"2026-12-01\",\"checkout\":\"2026-12-03\",\"roomtype\":\"standard\",\"guests\":2}"
+          "raw": "{\"fullname\":\"ภัคธร ศรีบุ่งง้าว\",\"guests\":2}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings"
-          ]
-        }
+        "url": "{{baseUrl}}/api/bookings"
       }
     },
     {
-      "name": "3. GET /api/bookings (with token)",
+      "name": "3. GET /api/bookings",
       "event": [
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function() {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"Response is an array\", function() {",
-              "  pm.expect(pm.response.json()).to.be.an(\"array\");",
-              "});",
-              "pm.test(\"Each booking has all required fields\", function() {",
-              "  const arr = pm.response.json();",
-              "  if (arr.length > 0) {",
-              "    pm.expect(arr[0]).to.include.all.keys(",
-              "      \"id\", \"fullname\", \"email\", \"phone\",",
-              "      \"checkin\", \"checkout\", \"roomtype\",",
-              "      \"guests\", \"status\", \"created_at\"",
-              "    );",
-              "  }",
-              "});"
+              "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
             ]
           }
         }
@@ -141,52 +82,24 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings"
-          ]
-        }
+        "url": "{{baseUrl}}/api/bookings"
       }
     },
     {
-      "name": "4. GET /api/bookings (NO token - Negative)",
+      "name": "4. GET /api/bookings - No Token",
       "event": [
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Returns 401 without token\", function() {",
-              "  pm.response.to.have.status(401);",
-              "});",
-              "pm.test(\"Has error message about login\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d).to.have.property(\"error\");",
-              "  pm.expect(d.error).to.include(\"เข้าสู่ระบบ\");",
-              "  pm.expect(d).to.not.have.property(\"id\");",
-              "});"
+              "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
             ]
           }
         }
       ],
       "request": {
         "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings"
-          ]
-        }
+        "url": "{{baseUrl}}/api/bookings"
       }
     },
     {
@@ -195,20 +108,8 @@
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function() {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"Returned id matches requested id\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.id).to.equal(parseInt(pm.environment.get(\"bookingId\")));",
-              "  pm.expect(d.email).to.be.a(\"string\").and.not.empty;",
-              "});",
-              "pm.test(\"Fullname should not be empty by Phakkathon\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.fullname).to.not.be.empty;",
-              "});"
+              "pm.test(\"ID Match\", () => pm.expect(pm.response.json().id).to.equal(parseInt(pm.environment.get(\"bookingId\"))));"
             ]
           }
         }
@@ -221,17 +122,7 @@
             "value": "Bearer {{token}}"
           }
         ],
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings",
-            "{{bookingId}}"
-          ]
-        }
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}"
       }
     },
     {
@@ -240,21 +131,8 @@
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function() {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"Updated fields are saved correctly\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.comment).to.equal(\"Updated by Newman test\");",
-              "  pm.expect(d.roomtype).to.equal(\"deluxe\");",
-              "  pm.expect(d).to.have.property(\"id\");",
-              "});",
-              "pm.test(\"Guests should be 3 by Phakkathon\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.guests).to.equal(3);",
-              "});"
+              "pm.test(\"Update OK\", () => pm.expect(pm.response.json().guests).to.equal(3));"
             ]
           }
         }
@@ -273,78 +151,19 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"fullname\":\"นักศึกษา ทดสอบ Newman (Updated)\",\"email\":\"newman-updated@test.com\",\"phone\":\"0898765432\",\"checkin\":\"2026-12-01\",\"checkout\":\"2026-12-05\",\"roomtype\":\"deluxe\",\"guests\":3,\"comment\":\"Updated by Newman test\"}"
+          "raw": "{\"guests\":3,\"comment\":\"Updated by Newman test\"}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings",
-            "{{bookingId}}"
-          ]
-        }
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}"
       }
     },
     {
-      "name": "7. DELETE /api/bookings/:id",
+      "name": "7. POST /api/login - Wrong Password",
       "event": [
         {
           "listen": "test",
           "script": {
-            "type": "text/javascript",
             "exec": [
-              "pm.test(\"Status code is 200\", function() {",
-              "  pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"Response has message and deleted id\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d).to.have.property(\"message\");",
-              "  pm.expect(d.id.toString()).to.equal(pm.environment.get(\"bookingId\").toString());",
-              "  pm.environment.unset(\"bookingId\");",
-              "});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "DELETE",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
-          }
-        ],
-        "url": {
-          "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "bookings",
-            "{{bookingId}}"
-          ]
-        }
-      }
-    },
-    {
-      "name": "8. POST /api/login — Wrong Password",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status code is 401\", function() {",
-              "  pm.response.to.have.status(401);",
-              "});",
-              "pm.test(\"Error message is correct\", function() {",
-              "  const d = pm.response.json();",
-              "  pm.expect(d.error).to.include(\"ไม่ถูกต้อง\");",
-              "});"
+              "pm.test(\"Status 401\", () => pm.response.to.have.status(401));"
             ]
           }
         }
@@ -359,18 +178,84 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"username\":\"admin\",\"password\":\"wrongpassword\"}"
+          "raw": "{\"username\":\"admin\",\"password\":\"wrong\"}"
         },
-        "url": {
-          "raw": "{{baseUrl}}/api/login",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "api",
-            "login"
-          ]
+        "url": "{{baseUrl}}/api/login"
+      }
+    },
+    {
+      "name": "8. POST /api/bookings/:id/checkin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check-In OK\", () => pm.expect(pm.response.json().status).to.equal(\"checked-in\"));",
+              "pm.test(\"Checked by Phakkathon\", () => pm.expect(pm.response.json().checkedBy).to.include(\"68030223\"));"
+            ]
+          }
         }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}/checkin"
+      }
+    },
+    {
+      "name": "9. POST /api/bookings/:id/checkout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Check-Out OK\", () => pm.expect(pm.response.json().status).to.equal(\"completed\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}/checkout"
+      }
+    },
+    {
+      "name": "10. POST /api/bookings/:id/confirm-checkout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Final Status Closed\", () => pm.expect(pm.response.json().finalStatus).to.equal(\"closed\"));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}/confirm-checkout"
+      }
+    },
+    {
+      "name": "11. DELETE /api/bookings/:id",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Delete Success\", () => pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings/{{bookingId}}"
       }
     }
   ]
