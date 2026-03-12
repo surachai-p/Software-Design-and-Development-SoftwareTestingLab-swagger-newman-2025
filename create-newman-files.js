@@ -1,0 +1,170 @@
+const fs   = require('fs');
+const path = require('path');
+
+// สร้างโฟลเดอร์ถ้ายังไม่มี
+fs.mkdirSync('newman',  { recursive: true });
+fs.mkdirSync('reports', { recursive: true });
+
+// 1. Environment - ตัวแปรที่ใช้ในระบบ
+const env = {
+  id: 'hotel-booking-local-env',
+  name: 'Hotel Booking - Local',
+  values: [
+    { key: 'baseUrl',   value: 'http://127.0.0.1:3001', type: 'default', enabled: true },
+    { key: 'token',     value: '',                       type: 'default', enabled: true },
+    { key: 'bookingId', value: '',                       type: 'default', enabled: true }
+  ],
+  _postman_variable_scope: 'environment'
+};
+
+// 2. Collection - ชุดทดสอบทั้งหมด 11 ข้อ
+const collection = {
+  info: {
+    name: 'Hotel Booking API Tests - Full Lab02A',
+    description: 'Automated API Tests โดย ภัคธร (68030223)',
+    schema: 'https://schema.getpostman.com/json/collection/v2.1.0/collection.json'
+  },
+  item: [
+    // ── 1. Login (Success) ──
+    {
+      name: '1. POST /api/login - Success',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 200", () => pm.response.to.have.status(200));',
+        'const d = pm.response.json();',
+        'pm.environment.set("token", d.token);'
+      ]}}],
+      request: {
+        method: 'POST',
+        header: [{ key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ username: 'admin', password: 'admin123' }) },
+        url: '{{baseUrl}}/api/login'
+      }
+    },
+    // ── 2. Create Booking ──
+    {
+      name: '2. POST /api/bookings',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 201", () => pm.response.to.have.status(201));',
+        'pm.environment.set("bookingId", pm.response.json().id);'
+      ]}}],
+      request: {
+        method: 'POST',
+        header: [{ key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ fullname: 'ภัคธร ศรีบุ่งง้าว', guests: 2 }) },
+        url: '{{baseUrl}}/api/bookings'
+      }
+    },
+    // ── 3. GET All (With Token) ──
+    {
+      name: '3. GET /api/bookings',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 200", () => pm.response.to.have.status(200));'
+      ]}}],
+      request: {
+        method: 'GET',
+        header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
+        url: '{{baseUrl}}/api/bookings'
+      }
+    },
+    // ── 4. GET (No Token - Negative) ──
+    {
+      name: '4. GET /api/bookings - No Token',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 401", () => pm.response.to.have.status(401));'
+      ]}}],
+      request: {
+        method: 'GET',
+        url: '{{baseUrl}}/api/bookings'
+      }
+    },
+    // ── 5. GET by ID ──
+    {
+      name: '5. GET /api/bookings/:id',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("ID Match", () => pm.expect(pm.response.json().id).to.equal(parseInt(pm.environment.get("bookingId"))));'
+      ]}}],
+      request: {
+        method: 'GET',
+        header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
+      }
+    },
+    // ── 6. Update Booking ──
+    {
+      name: '6. PUT /api/bookings/:id',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Update OK", () => pm.expect(pm.response.json().guests).to.equal(3));'
+      ]}}],
+      request: {
+        method: 'PUT',
+        header: [{ key: 'Authorization', value: 'Bearer {{token}}' }, { key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ guests: 3, comment: 'Updated by Newman test' }) },
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
+      }
+    },
+    // ── 7. Login (Wrong Password - Negative) ──
+    {
+      name: '7. POST /api/login - Wrong Password',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Status 401", () => pm.response.to.have.status(401));'
+      ]}}],
+      request: {
+        method: 'POST',
+        header: [{ key: 'Content-Type', value: 'application/json' }],
+        body: { mode: 'raw', raw: JSON.stringify({ username: 'admin', password: 'wrong' }) },
+        url: '{{baseUrl}}/api/login'
+      }
+    },
+    // ── 8. Check-In (New API) ──
+    {
+      name: '8. POST /api/bookings/:id/checkin',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Check-In OK", () => pm.expect(pm.response.json().status).to.equal("checked-in"));',
+        'pm.test("Checked by Phakkathon", () => pm.expect(pm.response.json().checkedBy).to.include("68030223"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/checkin'
+      }
+    },
+    // ── 9. Check-Out (New API) ──
+    {
+      name: '9. POST /api/bookings/:id/checkout',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Check-Out OK", () => pm.expect(pm.response.json().status).to.equal("completed"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/checkout'
+      }
+    },
+    // ── 10. Confirm Check-Out (New API) ──
+    {
+      name: '10. POST /api/bookings/:id/confirm-checkout',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Final Status Closed", () => pm.expect(pm.response.json().finalStatus).to.equal("closed"));'
+      ]}}],
+      request: {
+        method: 'POST',
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}/confirm-checkout'
+      }
+    },
+    // ── 11. Delete Booking ──
+    {
+      name: '11. DELETE /api/bookings/:id',
+      event: [{ listen: 'test', script: { exec: [
+        'pm.test("Delete Success", () => pm.response.to.have.status(200));'
+      ]}}],
+      request: {
+        method: 'DELETE',
+        header: [{ key: 'Authorization', value: 'Bearer {{token}}' }],
+        url: '{{baseUrl}}/api/bookings/{{bookingId}}'
+      }
+    }
+  ]
+};
+
+// เขียนไฟล์
+fs.writeFileSync(path.join('newman', 'hotel-booking-env.json'), JSON.stringify(env, null, 2));
+fs.writeFileSync(path.join('newman', 'hotel-booking-collection.json'), JSON.stringify(collection, null, 2));
+console.log('✅ ไฟล์ใหม่สร้างเรียบร้อย! พร้อม Assertions');
