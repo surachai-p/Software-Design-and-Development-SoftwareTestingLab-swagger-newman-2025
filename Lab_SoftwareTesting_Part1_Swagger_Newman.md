@@ -620,7 +620,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![alt text](image-6.png)
+![alt text](image-9.png)
 > ___
 
 ---
@@ -1128,19 +1128,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 7
+Total Assertions   : 16
+Passed             : 7
+Failed             : 0
+Duration           : 275ms
+Average Resp. Time : 24ms [min: 2ms, max: 148ms, s.d.: 50ms] ms
 ```
 
-![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
+![alt text](image-11.png)
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
+![alt text](image-12.png)
 
 ---
 
@@ -1182,7 +1182,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![alt text](image-16.png)
 
 > ___
 
@@ -1206,8 +1206,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 
 บันทึกผล:
 📸 หน้าจอผล Error:
-
-![หน้าจอ Newman Error]('images/Newman Error.png')
+![alt text](image-10.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1234,8 +1233,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 16
+Assertions หลังเพิ่ม : 17
 ```
 
 ---
@@ -1265,6 +1264,7 @@ Assertions หลังเพิ่ม : ______
 ```
 
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
+![alt text](image-13.png)
 
 > ___
 
@@ -1276,27 +1276,200 @@ Assertions หลังเพิ่ม : ______
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+   
    ```
+   ```javascript
+   // ----------------------------------------------------------------------
+   // ข้อ 1: API สำหรับ Check-in
+   // แก้ไขโดย: [ใส่ชื่อ-นามสกุล ของคุณ] [ใส่รหัสนักศึกษา ของคุณ]
+   // ----------------------------------------------------------------------
+   /**
+    * @swagger
+    * /api/checkin:
+    * post:
+    * summary: ทำการ Check-In เข้าที่พัก
+    * description: จำลองการ Check-In โดยใช้ ID ของการจอง
+    * tags: [Operations]
+    * requestBody:
+    * required: true
+    * content:
+    * application/json:
+    * schema:
+    * type: object
+    * required: [bookingId]
+    * properties:
+    * bookingId:
+    * type: integer
+    * example: 1
+    * responses:
+    * 200:
+    * description: Check-In สำเร็จ คืนค่าผลการจำลอง
+    */
+   app.post('/api/checkin', (req, res) => {
+     const { bookingId } = req.body;
+     
+     if (!bookingId) {
+       return res.status(400).json({ error: 'กรุณาระบุ bookingId' });
+     }
+
+     // จำลองข้อมูล (Mockup) ส่งกลับไป
+     const mockResponse = {
+       message: "Check-in สำเร็จ",
+       checkInId: "CI-" + Math.floor(Math.random() * 10000), // สุ่มรหัส Check-in
+       bookingId: bookingId,
+       checkInTime: new Date().toISOString(),
+       status: "Checked-In"
+     };
+
+     res.status(200).json(mockResponse);
+   });
+
+   ![alt text](image-14.png)
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+   
    ```
+   ![alt text](image-15.png)
+   ```javascript
+   // ----------------------------------------------------------------------
+   // ข้อ 2: API สำหรับ Check-out
+   // แก้ไขโดย: [ใส่ชื่อ-นามสกุล ของคุณ] [ใส่รหัสนักศึกษา ของคุณ]
+   // ----------------------------------------------------------------------
+   /**
+    * @swagger
+    * /api/checkout:
+    * post:
+    * summary: ทำการ Check-Out ออกจากที่พัก
+    * description: จำลองการ Check-Out โดยใช้ ID ของการ Check-In
+    * tags: [Operations]
+    * requestBody:
+    * required: true
+    * content:
+    * application/json:
+    * schema:
+    * type: object
+    * required: [checkInId]
+    * properties:
+    * checkInId:
+    * type: string
+    * example: "CI-1234"
+    * responses:
+    * 200:
+    * description: Check-Out สำเร็จ คืนค่าผลการจำลอง
+    */
+   app.post('/api/checkout', (req, res) => {
+     const { checkInId } = req.body;
+
+     if (!checkInId) {
+       return res.status(400).json({ error: 'กรุณาระบุ checkInId' });
+     }
+
+     // จำลองข้อมูล (Mockup) ส่งกลับไป
+     const mockResponse = {
+       message: "ดำเนินการ Check-out เรียบร้อย",
+       checkInId: checkInId,
+       checkOutTime: new Date().toISOString(),
+       additionalCharges: 0,
+       status: "Pending Confirmation"
+     };
+
+     res.status(200).json(mockResponse);
+   });
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
    บันทึก Code และ รูปผลการทำงาน
+   
    ```
+   ![alt text](image-18.png)
+   ```javascript
+      // ข้อ 3: API สำหรับ Confirm Check-out
+      // แก้ไขโดย: [ใส่ชื่อ-นามสกุล ของคุณที่นี่] [ใส่รหัสนักศึกษา ของคุณที่นี่]
+      // ----------------------------------------------------------------------
+      /**
+      * @swagger
+      * /api/confirm-checkout:
+      * post:
+      * summary: ยืนยันการ Check-Out
+      * description: จำลองการยืนยันรายการ Check-Out ที่เสร็จสิ้น
+      * tags: [Operations]
+      * requestBody:
+      * required: true
+      * content:
+      * application/json:
+      * schema:
+      * type: object
+      * required: 
+      * - checkInId
+      * properties:
+      * checkInId:
+      * type: string
+      * example: "CI-1234"
+      * responses:
+      * 200:
+      * description: ยืนยันการ Check-Out สำเร็จ
+      */
+      app.post('/api/confirm-checkout', (req, res) => {
+        const { checkInId } = req.body;
+
+        if (!checkInId) {
+          return res.status(400).json({ error: 'กรุณาระบุ checkInId เพื่อยืนยัน' });
+        }
+
+        const mockResponse = {
+          message: "ยืนยันการ Check-out สมบูรณ์ ขอบคุณที่ใช้บริการ",
+          checkInId: checkInId,
+          status: "Completed"
+        };
+
+        res.status(200).json(mockResponse);
+      });
+
+      /**
+      * @swagger
+      * /api/health:
+      * get:
+      * summary: ตรวจสอบสถานะของ Server
+      * description: ใช้สำหรับ Health Check — ไม่ต้องการ Authentication
+      * tags: [System]
+      * responses:
+      * 200:
+      * description: Server ทำงานปกติ
+      * content:
+      * application/json:
+      * schema:
+      * type: object
+      * properties:
+      * status:  { type: string,  example: ok }
+      * uptime:  { type: number,  example: 120.5 }
+      * time:    { type: string,  example: '2026-01-01T00:00:00.000Z' }
+      */
+      app.get('/api/health', (req, res) => {
+        res.json({
+          status: 'ok',
+          uptime: process.uptime(),
+          time:   new Date().toISOString()
+        });
+      });
+
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+   
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger
+   
    ```
+   ![alt text](image-19.png)
    
    ```
    บันทึกรูปผลการทำงานของ newman
    ```
+   ![alt text](image-20.png)
    
 
 ## คำถามท้ายการทดลอง
@@ -1305,32 +1478,36 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+Swagger UI เป็นเครื่องมือใช้ทดสอบ API โดยที่ข้อดีคือเราสามารถเขียนสเปคการทดสอบทั้งหมดไว้ได้และเพื่อนในทีมของเราก็จะเห็นทั้งหมดเลยว่า API ของเรามีอะไรบ้างและใช้ยังไง
+
+Newman จะเป็น Automated API Testing 
+swagger ui จะมาเป็น docs ในหน้าเว็บแต่ newman จะเป็น สคิปรันแบบออโต้ได้เลย
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ช่วยให้โค้ดของเราสะอาดขึ้นเพราะการเขียน jsdoc มันยาวทำใหเเรางงได้ '#/components/schemas/Booking' มันจะดึง api ของ Swagger ของเรามาใช้เลยทำให้เราไม่ต้องก็อป schemas มาแปะซ้ำ  ๆ 
 ```
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ -n 5 เป็นการรันซ้ำ 5 รอบ 
+ผลที่ควรระวัง: ถ้าใช้ data ซ้ำจะทำให้รอบต่อจากนั้ัน error เพราะ data ซ้ำกัน 
+กับถ้าเราใช้ กับ api post เราจะได้ data ขยะสำหรับ test เพิ่มมาอีก 5 อันอีก
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+เขียน Swagger จริง ๆ จะทำก่อนหรือหลังได้หมดแต่ ถ้าถามผมผมว่าควรมีโครง สเปคของ api ไว้ก่อนแล้วไปเขียนโค้ดแล้วขึ้น Swagger จากนั้นพอมีอะไรเพิ่มอีกก็ค่อยเขียน Swagger ที่หลัง 
+
+Newman ควรทำ 2 รอบคือตอนที่อยู่ใน local host ตอนที่เราเขียนโค้ดเสร็จทั้งหมดแล้ว กับ ก่อน deploy โปรดักชั่นเพื่อให้แน่ใจว่า api ของเราทำงานได้ถูกต้อง 
+
 ```
 
 ---
