@@ -520,11 +520,11 @@ npm run dev
 
 ```
 Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![alt text](images/1.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -546,7 +546,7 @@ Token (15 ตัวแรก)     : ______________________________...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![alt text](images/2.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +554,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : กรุณาเข้าสู่ระบบก่อน
 ```
 
 ---
@@ -614,7 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![alt text](images/3.png)
 > ___
 
 ---
@@ -653,7 +653,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![alt text](images/4.png)
 > ___
 
 ---
@@ -670,9 +670,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : Token ไม่ถูกต้องหรือหมดอายุ
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 ยังไม่ได้ล้อคอินหรือสมัครสมาชิกเข้าสู่ระบบ  403 ล็อคอินแล้วแต่ไม่มีสิทธิ์
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1122,19 +1122,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 7
+Total Assertions   : 16
+Passed             : 16
+Failed             : 0
+Duration           : 770 ms
+Average Resp. Time : 21 ms
 ```
 
-![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
+![alt text](images/5.png)
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
+![alt text](images/5-1.png)
 
 ---
 
@@ -1176,7 +1176,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![alt text](images/6.png)
 
 > ___
 
@@ -1201,7 +1201,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png')
+![alt text](images/7.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1228,8 +1228,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 18
+Assertions หลังเพิ่ม : 19
 ```
 
 ---
