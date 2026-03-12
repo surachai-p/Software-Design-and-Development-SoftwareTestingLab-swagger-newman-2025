@@ -1084,15 +1084,15 @@ pm.environment.unset("bookingId");
 
 ```javascript
 // เพิ่มใน Request 5 (GET /api/bookings/:id) ใน create-newman-files.js
-pm.test("____________________________", function() {
+pm.test("Fullname is a string and not empty", function() {
   const d = pm.response.json();
-  pm.expect(d.fullname).____________________________; // ตรวจสอบ fullname ไม่ว่าง
+  pm.expect(d.fullname).to.be.a("string").and.not.empty; // ตรวจสอบ fullname ไม่ว่าง
 });
 
 // เพิ่มใน Request 6 (PUT /api/bookings/:id) ใน create-newman-files.js
-pm.test("____________________________", function() {
+pm.test("Guests count is updated to 3", function() {
   const d = pm.response.json();
-  pm.expect(d.guests).____________________________; // ตรวจสอบ guests = 3
+  pm.expect(d.guests).to.equal(3); // ตรวจสอบ guests = 3
 });
 ```
 
@@ -1123,19 +1123,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 7
+Total Assertions   : 18
+Passed             : 17
+Failed             : 1
+Duration           : 803 ms
+Average Resp. Time : 26 ms
 ```
 
-![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
+![alt text](<images-Swagger_Newman/Newman Terminal Output.png>)
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
+![alt text](<images-Swagger_Newman/newman-reporter-htmlextra Report.png>)
 
 ---
 

@@ -150,7 +150,15 @@ const collection = {
         '  const d = pm.response.json();',
         '  pm.expect(d.id).to.equal(parseInt(pm.environment.get("bookingId")));',
         '  pm.expect(d.email).to.be.a("string").and.not.empty;',
-        '});'
+        '});',
+        'pm.test("Fullname is a string and not empty", function() {',
+        '  const d = pm.response.json();',
+        '  pm.expect(d.fullname).to.be.a("string").and.not.empty;',
+        '});',
+        'pm.test("Guests count is updated to 3", function() {',
+        '  const d = pm.response.json();',
+        '  pm.expect(d.guests).to.equal(3);',
+        '});',
       ]}}],
       request: {
         method: 'GET',

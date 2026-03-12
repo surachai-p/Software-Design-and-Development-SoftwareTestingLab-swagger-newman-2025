@@ -21,6 +21,8 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "newman": "^6.2.2",
+    "newman-reporter-htmlextra": "^1.23.1",
     "nodemon": "^3.1.14"
   }
 }
