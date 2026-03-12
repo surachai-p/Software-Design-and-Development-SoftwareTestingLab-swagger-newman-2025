@@ -452,6 +452,63 @@ app.post('/api/bookings/:id/checkin', authenticateToken, (req, res) => {
 
 /**
  * @swagger
+ * /api/bookings/{id}/checkout:
+ *   post:
+ *     summary: เช็คเอาท์ออกจากห้องพัก (Check-Out)
+ *     description: "API สำหรับทำการเช็คเอาท์โดยระบุ ID ของการจอง (แก้ไขโดย: จิตรเทพ พะชำนิ รหัสนักศึกษา: 68030040)"
+ *     tags:
+ *       - Bookings
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID ของการจองที่ต้องการทำการ Check-Out
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: เช็คเอาท์สำเร็จ (ข้อมูลจำลอง Mockup)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Check-out successful"
+ *                 bookingId:
+ *                   type: string
+ *                   example: "1"
+ *                 status:
+ *                   type: string
+ *                   example: "completed"
+ *                 checkOutTime:
+ *                   type: string
+ *                   example: "2026-03-12T12:00:00.000Z"
+ *       401:
+ *         description: ไม่ได้ส่ง Token
+ */
+
+
+app.post('/api/bookings/:id/checkout', authenticateToken, (req, res) => {
+  const bookingId = req.params.id;
+  
+  // สร้างข้อมูลจำลอง (Mockup JSON) สำหรับการ Check-Out
+  const mockResponse = {
+    message: "Check-out successful",
+    bookingId: bookingId,
+    status: "completed",
+    checkOutTime: new Date().toISOString()
+  };
+
+  res.status(200).json(mockResponse);
+});
+
+/**
+ * @swagger
  * /api/health:
  *   get:
  *     summary: ตรวจสอบสถานะของ Server
