@@ -5,7 +5,7 @@ const bcrypt     = require('bcryptjs');
 const db         = require('./database');
 const swaggerJsdoc = require('swagger-jsdoc');       // อ่าน JSDoc comment → สร้าง spec
 const swaggerUi    = require('swagger-ui-express');   // serve spec เป็น Interactive UI
-
+ 
 const app        = express();
 const PORT       = 3001;
 // ─────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ const swaggerOptions = {
   properties: {
     token: {
       type: 'string',
-      description: 'แก้ไข Login Response Description โดย thanakrit'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Response description โดยใคร
+      description: 'แก้ไข Login Response Description โดย Surachai'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Response description โดยใคร
     },
     user: {
       type: 'object',
@@ -73,29 +73,29 @@ const swaggerOptions = {
   // บอก swagger-jsdoc ให้อ่าน @swagger comment จากไฟล์เหล่านี้
   apis: ['./server.js'],
 };
-
+ 
 // สร้าง OpenAPI spec จาก options และ @swagger comments ในไฟล์
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
+ 
 // Mount Swagger UI ที่ path /api-docs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
+ 
 console.log('📄 Swagger UI: http://localhost:3001/api-docs');
-
+ 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
-
+ 
 app.use(cors());
 app.use(express.json()); // Express 4.16+ — ไม่ต้องใช้ body-parser อีกต่อไป
-
+ 
 // Middleware: ตรวจสอบ JWT Token ก่อนเข้าถึง protected routes
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // "Bearer TOKEN"
-
+ 
   if (!token) {
     return res.status(401).json({ error: 'กรุณาเข้าสู่ระบบก่อน' });
   }
-
+ 
   jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) {
       return res.status(403).json({ error: 'Token ไม่ถูกต้องหรือหมดอายุ' });
@@ -104,7 +104,115 @@ const authenticateToken = (req, res, next) => {
     next();
   });
 };
-
+ 
+// ===============================================
+// API: CheckIn Guest
+// แก้ไขโดย: <ชื่อ-นามสกุล>
+// รหัสนักศึกษา: <รหัสนักศึกษา>
+// ===============================================
+ 
+/**
+ * @swagger
+ * /api/checkin/{bookingId}:
+ *   post:
+ *     summary: Check in guest
+ *     description: Check in using booking ID
+ *     parameters:
+ *       - in: path
+ *         name: bookingId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Booking ID
+ *     responses:
+ *       200:
+ *         description: Check-in successful
+ */
+app.post('/api/checkin/:bookingId', (req, res) => {
+ 
+  const bookingId = req.params.bookingId;
+ 
+  const checkin = {
+    checkinId: 1001,
+    bookingId: bookingId,
+    guestName: "Demo Guest",
+    roomNumber: "305",
+    checkinTime: new Date(),
+    status: "Checked-In",
+    message: "Check-in successful"
+  };
+ 
+  res.status(200).json(checkin);
+ 
+});
+ 
+/**
+ * @swagger
+ * /api/checkout/{checkinId}:
+ *   post:
+ *     summary: Check out guest
+ *     description: Check out using check-in ID
+ *     tags: [CheckOut]
+ *     parameters:
+ *       - in: path
+ *         name: checkinId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Check-in ID
+ *     responses:
+ *       200:
+ *         description: Check-out successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 checkoutId:
+ *                   type: integer
+ *                   example: 2001
+ *                 checkinId:
+ *                   type: integer
+ *                   example: 1001
+ *                 guestName:
+ *                   type: string
+ *                   example: Demo Guest
+ *                 roomNumber:
+ *                   type: string
+ *                   example: 305
+ *                 checkoutTime:
+ *                   type: string
+ *                   example: 2026-03-20T10:30:00Z
+ *                 totalBill:
+ *                   type: number
+ *                   example: 2500
+ *                 status:
+ *                   type: string
+ *                   example: Checked-Out
+ *                 message:
+ *                   type: string
+ *                   example: Check-out successful
+ */
+app.post('/api/checkout/:checkinId', (req, res) => {
+ 
+  const checkinId = req.params.checkinId;
+ 
+  // Mock JSON Data
+  const checkout = {
+    checkoutId: 2001,
+    checkinId: checkinId,
+    guestName: "Demo Guest",
+    roomNumber: "305",
+    checkoutTime: new Date(),
+    totalBill: 2500,
+    status: "Checked-Out",
+    message: "Check-out successful"
+  };
+ 
+  res.status(200).json(checkout);
+ 
+});
+ 
 /**
  * @swagger
  * /api/login:
@@ -141,33 +249,33 @@ const authenticateToken = (req, res, next) => {
 // POST /api/login — ตรวจสอบ username/password และออก JWT
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-
+ 
   if (!username || !password) {
     return res.status(400).json({ error: 'กรุณากรอก username และ password' });
   }
-
+ 
   db.get('SELECT * FROM users WHERE username = ?', [username], async (err, user) => {
     if (err)   return res.status(500).json({ error: err.message });
     if (!user) return res.status(401).json({ error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
-
+ 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).json({ error: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
     }
-
+ 
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       JWT_SECRET,
       { expiresIn: '1h' }
     );
-
+ 
     res.json({
       token,
       user: { id: user.id, username: user.username, role: user.role }
     });
   });
 });
-
+ 
 /**
  * @swagger
  * /api/bookings:
@@ -196,7 +304,7 @@ app.post('/api/bookings', (req, res) => {
   const { fullname, email, phone, checkin, checkout, roomtype, guests } = req.body;
   const sql = `INSERT INTO bookings (fullname, email, phone, checkin, checkout, roomtype, guests)
                VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
+ 
   db.run(sql, [fullname, email, phone, checkin, checkout, roomtype, guests], function(err) {
     if (err) return res.status(400).json({ error: err.message });
     db.get('SELECT * FROM bookings WHERE id = ?', [this.lastID], (err, row) => {
@@ -205,7 +313,7 @@ app.post('/api/bookings', (req, res) => {
     });
   });
 });
-
+ 
 /**
  * @swagger
  * /api/bookings:
@@ -236,7 +344,7 @@ app.get('/api/bookings', authenticateToken, (req, res) => {
     res.json(rows);
   });
 });
-
+ 
 /**
  * @swagger
  * /api/bookings/{id}:
@@ -273,7 +381,7 @@ app.get('/api/bookings/:id', authenticateToken, (req, res) => {
     res.json(row);
   });
 });
-
+ 
 /**
  * @swagger
  * /api/bookings/{id}:
@@ -314,12 +422,12 @@ app.put('/api/bookings/:id', authenticateToken, (req, res) => {
                SET fullname=?, email=?, phone=?, checkin=?, checkout=?,
                    roomtype=?, guests=?, comment=?
                WHERE id=?`;
-
+ 
   db.run(sql, [fullname, email, phone, checkin, checkout, roomtype, guests, comment, req.params.id],
     function(err) {
       if (err)             return res.status(400).json({ error: err.message });
       if (this.changes === 0) return res.status(404).json({ error: 'ไม่พบข้อมูลการจอง' });
-
+ 
       db.get('SELECT * FROM bookings WHERE id = ?', [req.params.id], (err, row) => {
         if (err) return res.status(400).json({ error: err.message });
         res.json(row);
@@ -327,7 +435,7 @@ app.put('/api/bookings/:id', authenticateToken, (req, res) => {
     }
   );
 });
-
+ 
 /**
  * @swagger
  * /api/bookings/{id}:
@@ -392,5 +500,7 @@ app.get('/api/health', (req, res) => {
     time:   new Date().toISOString()
   });
 });
-
+ 
+ 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+ 
