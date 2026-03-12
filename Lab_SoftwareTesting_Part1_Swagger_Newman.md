@@ -653,7 +653,8 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![Swagger UI-health check](/images-Swagger_Newman/image-swagger-UI-Response-Health.png)
+![alt text](images-Swagger_Newman/image-swagger-UI-Response-Health-time.png)
 > ___
 
 ---
@@ -670,9 +671,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : Token ไม่ถูกต้องหรือหมดอายุ
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 Unauthorized คือ ไม่ได้รับอนุญาตเช่น ยังไม่ได้ล็อกอินหรือข้อมูลล็อกอินผิด ในขณะที่ 403 Forbidden คือ ห้ามเข้าถึง เช่น ระบบรู้ตัวตนแล้ว แต่ไม่มีสิทธิ์เข้าถึงทรัพยากรนั้น
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2

@@ -392,4 +392,31 @@ app.delete('/api/bookings/:id', authenticateToken, (req, res) => {
   });
 });
 
+/**
+ * @swagger
+ * /api/health:
+ *   get:
+ *     summary: ตรวจสอบสถานะของ Server
+ *     description: ใช้สำหรับ Health Check — ไม่ต้องการ Authentication
+ *     tags: [System]
+ *     responses:
+ *       200:
+ *         description: Server ทำงานปกติ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:  { type: string,  example: ok }
+ *                 uptime:  { type: number,  example: 120.5 }
+ *                 time:    { type: string,  example: '2026-01-01T00:00:00.000Z' }
+ */
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    uptime: process.uptime(),    // จำนวนวินาทีที่ server รันมา
+    time:   new Date().toISOString()
+  });
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
