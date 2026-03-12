@@ -372,6 +372,135 @@
           ]
         }
       }
+    },
+    {
+      "name": "9. POST /api/bookings/:id/checkin",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => { pm.response.to.have.status(200); });",
+              "pm.test(\"Status is checked-in\", () => {",
+              "  const d = pm.response.json();",
+              "  pm.expect(d.status).to.equal(\"checked-in\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/bookings/1/checkin",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "1",
+            "checkin"
+          ]
+        }
+      }
+    },
+    {
+      "name": "10. POST /api/bookings/:id/checkout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => { pm.response.to.have.status(200); });",
+              "pm.test(\"Status is completed\", () => {",
+              "  const d = pm.response.json();",
+              "  pm.expect(d.status).to.equal(\"completed\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/bookings/1/checkout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "1",
+            "checkout"
+          ]
+        }
+      }
+    },
+    {
+      "name": "11. POST /api/bookings/:id/confirm-checkout",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code is 200\", () => { pm.response.to.have.status(200); });",
+              "pm.test(\"Final status is closed\", () => {",
+              "  const d = pm.response.json();",
+              "  pm.expect(d.finalStatus).to.equal(\"closed\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/bookings/1/confirm-checkout",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "bookings",
+            "1",
+            "confirm-checkout"
+          ]
+        }
+      }
     }
   ]
 }

@@ -1436,15 +1436,14 @@ Assertions หลังเพิ่ม : 19
     });
     ```
     ![alt text](images-Swagger_Newman/image-test-3.png)
-    
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
-   ```
-   บันทึกรูปผลการทำงานของ Swagger
-   ```
+    ![alt text](images-Swagger_Newman/image-test-1.png)
+    ![alt text](images-Swagger_Newman/image-test-2.png)
+    ![alt text](images-Swagger_Newman/image-test-3.png)
    
-   ```
-   บันทึกรูปผลการทำงานของ newman
-   ```
+   ![alt text](images-Swagger_Newman/image-newman-edit.png)
+   
+   
    
 
 ## คำถามท้ายการทดลอง
