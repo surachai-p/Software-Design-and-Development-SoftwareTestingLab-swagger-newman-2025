@@ -519,12 +519,12 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)![alt text](image.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -546,7 +546,7 @@ Token (15 ตัวแรก)     : ______________________________...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')![alt text](image-1.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +554,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : Unauthorized
 ```
 
 ---
@@ -614,7 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)![alt text](image-2.png)
 > ___
 
 ---
@@ -653,7 +653,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![Swagger UI-health check](images/swagger-UI-Response.png)!![alt text](image-4.png)
 > ___
 
 ---
@@ -670,10 +670,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
-```
+Response Code หลัง token หมดอายุ : 403
+Error message                    : Forbidden
+ข้อแตกต่างระหว่าง 401 กับ 403   :401ให้เข้าสู่ระบบ 403 เเจ้งtokenหมดอายุ
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
 
@@ -1122,19 +1121,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel booking api tests
+Total Requests     : 7
+Total Assertions   : 16
+Passed             : 16
+Failed             : 0
+Duration           : 727ms
+Average Resp. Time : 21 ms
 ```
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
+![หน้าจอ Newman Report]('images/Newman Report.png')![alt text](image-3.png)
 
 ---
 
@@ -1176,7 +1175,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')![alt text](image-5.png)
 
 > ___
 
@@ -1199,7 +1198,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 
 
 บันทึกผล:
-📸 หน้าจอผล Error:
+📸 หน้าจอผล Error:![alt text](image-6.png)
 
 ![หน้าจอ Newman Error]('images/Newman Error.png')
 
@@ -1228,8 +1227,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 16
+Assertions หลังเพิ่ม : 19
 ```
 
 ---
@@ -1258,7 +1257,7 @@ Assertions หลังเพิ่ม : ______
 }
 ```
 
-📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
+📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):![alt text](image-7.png)
 
 > ___
 
@@ -1270,27 +1269,149 @@ Assertions หลังเพิ่ม : ______
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
+   ```![alt text](image-8.png)// ---------- API สำหรับ CheckIn เพิ่มเติม (mock) โดย ทีฆทัศน์ พินิจทรัพย์  รหัส68030107 --------
+/**
+ * @swagger
+ * /api/checkin/{id}:
+ *   post:
+ *     summary: CheckIn by booking ID (mock)
+ *     description: ใช้สำหรับจำลองการ CheckIn โดยรับ ID การจองจาก path
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID ของการจองที่จะ CheckIn
+ *     responses:
+ *       200:
+ *         description: CheckIn สำเร็จ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: checked in
+ *                 bookingId:
+ *                   type: integer
+ *                   example: 1
+ *                 time:
+ *                   type: string
+ *                   example: '2026-01-01T12:00:00.000Z'
+ *       404:
+ *         description: ไม่พบการจอง (mock จะไม่ใช้)
+ */
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
+   ```![alt text](image-9.png)// ---------- API สำหรับ CheckOut เพิ่มเติม (mock) โดย ทีฆทัศน์ พินิจทรัพย์  รหัส68030107 --------
+/**
+ * @swagger
+ * /api/checkout/{id}:
+ *   post:
+ *     summary: CheckOut by checkin ID (mock)
+ *     description: รับ ID ของการ CheckIn เพื่อทำการ CheckOut และคืนรายละเอียด
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID ของการ CheckIn ที่จะ CheckOut
+ *     responses:
+ *       200:
+ *         description: CheckOut สำเร็จ พร้อมรายละเอียดเวลาและบิล
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: checked out
+ *                 checkinId:
+ *                   type: integer
+ *                   example: 1
+ *                 time:
+ *                   type: string
+ *                   example: '2026-01-01T14:00:00.000Z'
+ *                 billAmount:
+ *                   type: number
+ *                   example: 123.45
+ *       404:
+ *         description: ไม่พบการ CheckIn
+ */
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
+   ```markdown
+// ---------- API สำหรับ ConfirmCheckOut เพิ่มเติม (mock) โดย ทีฆทัศน์ พินิจทรัพย์  รหัส68030107 --------
+/**
+ * @swagger
+ * /api/confirm-checkout/{id}:
+ *   post:
+ *     summary: Confirm CheckOut by checkin ID (mock)
+ *     description: รับ ID ของการ CheckIn ที่ต้องการยืนยันการ CheckOut แล้วคืนสถานะพร้อมข้อมูลบิล
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID ของการ CheckIn ที่จะยืนยันการ CheckOut
+ *     responses:
+ *       200:
+ *         description: ยืนยัน CheckOut สำเร็จ พร้อมรายละเอียด
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: checkout confirmed
+ *                 checkinId:
+ *                   type: integer
+ *                   example: 1
+ *                 confirmedAt:
+ *                   type: string
+ *                   example: '2026-01-01T15:00:00.000Z'
+ *                 totalAmount:
+ *                   type: number
+ *                   example: 123.45
+ *       404:
+ *         description: ไม่พบการ CheckIn
+ */
    ```
-   บันทึก Code และ รูปผลการทำงาน
-   ```
+
+   📸 ตัวอย่างผลลัพธ์จาก Swagger UI เมื่อเรียก `/api/confirm-checkout/1`
+   ![Swagger UI - confirm checkout response](images/swagger-UI-Response.png)
+   ```![alt text](image-10.png)
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
+
+   - Swagger UI: เปิด **http://localhost:3001/api-docs** อีกครั้ง แล้วยืนยันว่า endpoint
+     `POST /api/confirm-checkout/{id}` ปรากฏในรายการและสามารถกด **Try it out** ได้
+   - ถ่ายภาพหน้าจอของ Response (รวมทั้งตัวอย่างที่แสดงด้านบน) แล้วแทรกไว้ที่นี่:![alt text](image-13.png)
+
+   npx newman run newman/hotel-booking-collection.json \
+     -e newman/hotel-booking-env.json \
+     -r cli,htmlextra \
+     --reporter-htmlextra-export ./reports/api-test-report.html \
+     --reporter-htmlextra-title "Hotel Booking API Test Report – with mocks"
    ```
-   บันทึกรูปผลการทำงานของ Swagger
-   ```
-   
-   ```
-   บันทึกรูปผลการทำงานของ newman
-   ```
+
+   ผลลัพธ์จะมี **Total Requests: 9** (รวม request 9 สำหรับ confirm‑checkout) และ
+   assertions เพิ่มขึ้นตามที่เขียนไว้ก่อนหน้า
+
+   แทรกรูปหน้าจอ Terminal หรือ HTML Report ที่แสดงการรันสำเร็จ:
+![alt text](image-12.png)
    
 
 ## คำถามท้ายการทดลอง
@@ -1298,33 +1419,29 @@ Assertions หลังเพิ่ม : ______
 **ข้อ 1.** Swagger UI และ Newman ต่างกันอย่างไรในการทดสอบ API ควรใช้เครื่องมือใดในสถานการณ์ใด?
 
 ```
-คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+คำตอบ: Swagger UI เป็นอินเตอร์เฟสแบบกราฟิกที่ใช้ทดสอบทีละ endpoint เหมาะสำหรับสำรวจ API หรือสาธิตให้ทีมดู ส่วน Newman เป็น CLI ที่รันทั้ง collection พร้อม assertions อัตโนมัติ เหมาะสำหรับรันทดสอบซ้ำ ๆ บน terminal หรือใน CI/CD pipeline
+ใช้ Swagger เมื่อกำลังออกแบบ/ตรวจสอบ endpoint เดี่ยว ๆ, ใช้ Newman เมื่อจะทำ regression test หรือรันชุดคำสั่งอัตโนมัติ
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
-คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+คำตอบ: เป็นการอ้างถึง schema ที่นิยามไว้ในส่วน components ซึ่งช่วยให้สามารถใช้งานซ้ำได้หลาย endpoint โดยไม่ต้องเขียนโครงสร้างซ้ำ ช่วยลดข้อผิดพลาดและทำให้แก้ไข schema ที่เดียวแล้วส่งผลทุกที่
 ```
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ --iteration-count 5 (หรือ -n 5)
+ผลที่ควรระวัง: ค่าที่เก็บใน environment/globals อาจยังคงอยู่ข้ามรอบ ทำให้ผลการทดสอบไม่เป็นอิสระ เช่น bookingId ถูกตั้งไว้แล้วยังไม่ถูกล้าง ควร reset สถานะระหว่างรอบหรือ unset ค่า
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
-คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+คำตอบ: ควรเขียน Swagger พร้อมหรือก่อนเขียนโค้ด API เพื่อให้เป็นสัญญาและแนวทาง ทีมสามารถตกลงโครงสร้างก่อนพัฒนา
+Newman ควรรันตั้งแต่เริ่มพัฒนาแล้วรันทดสอบทุกครั้งที่มีการเปลี่ยนแปลง และนำไปใช้ใน CI/CD เพื่อจับ regression ก่อน deploy
 ```
 
 ---
