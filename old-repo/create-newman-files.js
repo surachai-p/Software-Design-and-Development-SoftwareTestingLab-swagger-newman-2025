@@ -12,7 +12,7 @@ const env = {
   id: 'hotel-booking-local-env',
   name: 'Hotel Booking - Local',
   values: [
-    { key: 'baseUrl',   value: 'http://localhost:9999', type: 'default', enabled: true },
+    { key: 'baseUrl',   value: 'http://localhost:3001', type: 'default', enabled: true },
     { key: 'token',     value: '',                      type: 'default', enabled: true },
     { key: 'bookingId', value: '',                      type: 'default', enabled: true }
   ],

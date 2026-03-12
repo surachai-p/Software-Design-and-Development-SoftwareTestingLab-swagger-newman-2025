@@ -55,7 +55,7 @@ const swaggerOptions = {
   properties: {
     token: {
       type: 'string',
-      description: 'แก้ไข Login Response Description โดย Surachai'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Response description โดยใคร
+      description: 'แก้ไข Login Response Description โดย thanakrit'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Response description โดยใคร
     },
     user: {
       type: 'object',
