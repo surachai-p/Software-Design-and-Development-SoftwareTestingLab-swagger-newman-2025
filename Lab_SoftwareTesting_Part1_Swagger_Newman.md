@@ -519,11 +519,13 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1...
 ```
 
-### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
+### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login 
+Response ที่นี่
+![alt text](image.png)
 ![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
 ---
 
@@ -547,6 +549,10 @@ Token (15 ตัวแรก)     : ______________________________...
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
 ![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,10 +560,10 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : "error": "กรุณาเข้าสู่ระบบก่อน"
 ```
-
+![alt text](image-5.png)
 ---
 
 ### 🔧 แบบฝึกหัดที่ 1 — ปรับแต่ง Swagger Documentation
@@ -614,7 +620,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![alt text](image-6.png)
 > ___
 
 ---
@@ -653,7 +659,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![alt text](image-7.png)
 > ___
 
 ---
@@ -664,15 +670,15 @@ app.get('/api/health', (req, res) => {
 
 ```javascript
 // แก้ชั่วคราว — token หมดอายุใน 5 วินาที
-{ expiresIn: '5s' }
+{ expiresIn: '1h' }
 ```
 
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : "error": "กรุณาเข้าสู่ระบบก่อน"
+Error message                    : Unauthorized
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 คือยังไม่ได้ login 403 คือ token ผิดหรือหมดอายุ
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
