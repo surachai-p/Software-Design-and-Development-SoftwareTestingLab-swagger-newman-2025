@@ -1269,9 +1269,63 @@ Assertions หลังเพิ่ม : 19
 
 ## แบบทดสอบ
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-   ```
-   บันทึก Code และ รูปผลการทำงาน
-   ```
+    ```js
+    /**
+    * @swagger
+    * /api/bookings/{id}/checkin:
+    *   post:
+    *     summary: เช็คอินเข้าห้องพัก (Check-In)
+    *     description: "API สำหรับทำการเช็คอินโดยระบุ ID ของการจอง (แก้ไขโดย: จิตรเทพ พะชำนิ รหัสนักศึกษา: 68030040)"
+    *     tags:
+    *       - Bookings
+    *     security:
+    *       - bearerAuth: []
+    *     parameters:
+    *       - in: path
+    *         name: id
+    *         required: true
+    *         schema:
+    *           type: integer
+    *         description: ID ของการจองที่ต้องการทำการ Check-In
+    *         example: 1
+    *     responses:
+    *       200:
+    *         description: เช็คอินสำเร็จ (ข้อมูลจำลอง Mockup)
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 message:
+    *                   type: string
+    *                   example: "Check-in successful"
+    *                 bookingId:
+    *                   type: string
+    *                   example: "1"
+    *                 status:
+    *                   type: string
+    *                   example: "checked-in"
+    *                 checkInTime:
+    *                   type: string
+    *                   example: "2026-03-12T14:30:00.000Z"
+    *       401:
+    *         description: ไม่ได้ส่ง Token
+    */
+
+    app.post('/api/bookings/:id/checkin', authenticateToken, (req, res) => {
+      const bookingId = req.params.id;
+      
+      // สร้างข้อมูลจำลอง (Mockup JSON) เพื่อส่ง Response กลับไปตามโจทย์
+      const mockResponse = {
+        message: "Check-in successful",
+        bookingId: bookingId,
+        status: "checked-in",
+        checkInTime: new Date().toISOString()
+      };
+
+      res.status(200).json(mockResponse);
+    });
+    ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```

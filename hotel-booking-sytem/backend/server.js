@@ -392,6 +392,64 @@ app.delete('/api/bookings/:id', authenticateToken, (req, res) => {
   });
 });
 
+
+/**
+ * @swagger
+ * /api/bookings/{id}/checkin:
+ *   post:
+ *     summary: เช็คอินเข้าห้องพัก (Check-In)
+ *     description: "API สำหรับทำการเช็คอินโดยระบุ ID ของการจอง (แก้ไขโดย: จิตรเทพ พะชำนิ รหัสนักศึกษา: 68030040)"
+ *     tags:
+ *       - Bookings
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID ของการจองที่ต้องการทำการ Check-In
+ *         example: 1
+ *     responses:
+ *       200:
+ *         description: เช็คอินสำเร็จ (ข้อมูลจำลอง Mockup)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Check-in successful"
+ *                 bookingId:
+ *                   type: string
+ *                   example: "1"
+ *                 status:
+ *                   type: string
+ *                   example: "checked-in"
+ *                 checkInTime:
+ *                   type: string
+ *                   example: "2026-03-12T14:30:00.000Z"
+ *       401:
+ *         description: ไม่ได้ส่ง Token
+ */
+
+app.post('/api/bookings/:id/checkin', authenticateToken, (req, res) => {
+  const bookingId = req.params.id;
+  
+  // สร้างข้อมูลจำลอง (Mockup JSON) เพื่อส่ง Response กลับไปตามโจทย์
+  const mockResponse = {
+    message: "Check-in successful",
+    bookingId: bookingId,
+    status: "checked-in",
+    checkInTime: new Date().toISOString()
+  };
+
+  res.status(200).json(mockResponse);
+});
+
+
 /**
  * @swagger
  * /api/health:
