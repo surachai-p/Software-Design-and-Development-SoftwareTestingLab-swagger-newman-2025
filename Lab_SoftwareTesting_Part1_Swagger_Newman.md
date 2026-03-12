@@ -525,6 +525,7 @@ Token (15 ตัวแรก)     : ______________________________...
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
 ![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![alt text](image.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -547,6 +548,7 @@ Token (15 ตัวแรก)     : ______________________________...
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
 ![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![alt text](image-1.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -615,6 +617,7 @@ LoginResponse: {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
 ![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![alt text](image-2.png)
 > ___
 
 ---
@@ -654,6 +657,7 @@ app.get('/api/health', (req, res) => {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
 ![Swagger UI-health check](images/swagger-UI-Response.png)
+![alt text](image-3.png)
 > ___
 
 ---
@@ -1135,7 +1139,7 @@ Average Resp. Time : ______________________________ ms
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
 ![หน้าจอ Newman Report]('images/Newman Report.png')
-
+![alt text](image-4.png)
 ---
 
 ### 🔧 แบบฝึกหัดที่ 2 — แก้ไขและทดลอง Newman Collection
@@ -1177,7 +1181,7 @@ npx newman run newman/hotel-booking-collection.json \
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
 ![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
-
+![alt text](image-5.png)
 > ___
 
 ---
@@ -1202,7 +1206,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 📸 หน้าจอผล Error:
 
 ![หน้าจอ Newman Error]('images/Newman Error.png')
-
+![alt text](image-6.png)
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
 
@@ -1228,8 +1232,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : ___18___
+Assertions หลังเพิ่ม : ___19___
 ```
 
 ---
@@ -1261,36 +1265,444 @@ Assertions หลังเพิ่ม : ______
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
 
 > ___
-
+![alt text](image-7.png)
 ---
 
 ---
 
 ## แบบทดสอบ
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
+![alt text](image-8.png)
    ```
-   บันทึก Code และ รูปผลการทำงาน
+   const express = require('express');
+    const router  = express.Router();
+
+    // ─────────────────────────────────────────────
+    // Mockup Data — จำลองข้อมูลการจองที่มีอยู่
+    // ─────────────────────────────────────────────
+    const mockBookings = [
+      {
+        id: 1,
+        fullname: 'Nattapong Muanprasan',
+        email: '68030135@kmitl.ac.th',
+        phone: '0812345678',
+        checkin: '2026-12-01',
+        checkout: '2026-12-03',
+        roomtype: 'standard',
+        roomNumber: '101',
+        guests: 2,
+        status: 'pending'
+      },
+      {
+        id: 2,
+        fullname: 'Somchai Jaidee',
+        email: 'somchai@test.com',
+        phone: '0899999999',
+        checkin: '2026-12-05',
+        checkout: '2026-12-07',
+        roomtype: 'deluxe',
+        roomNumber: '205',
+        guests: 1,
+        status: 'pending'
+      },
+      {
+        id: 3,
+        fullname: 'Already CheckedIn',
+        email: 'checkedin@test.com',
+        phone: '0811111111',
+        checkin: '2026-11-01',
+        checkout: '2026-11-03',
+        roomtype: 'suite',
+        roomNumber: '301',
+        guests: 2,
+        status: 'checked_in'
+      }
+    ];
+
+    // ─────────────────────────────────────────────
+    // POST /api/checkin/:id
+    // CheckIn โดยระบุ ID ของการจอง
+    // ─────────────────────────────────────────────
+    router.post('/checkin/:id', (req, res) => {
+      const bookingId = parseInt(req.params.id);
+
+      // 1. หา booking จาก mockup data
+      const booking = mockBookings.find(b => b.id === bookingId);
+
+      // 2. ไม่พบ booking
+      if (!booking) {
+        return res.status(404).json({
+          success: false,
+          error: `ไม่พบการจอง ID ${bookingId}`
+        });
+      }
+
+      // 3. CheckIn ซ้ำ
+      if (booking.status === 'checked_in') {
+        return res.status(409).json({
+          success: false,
+          error: 'การจองนี้ CheckIn ไปแล้ว',
+          booking: {
+            id: booking.id,
+            fullname: booking.fullname,
+            status: booking.status
+          }
+        });
+      }
+
+      // 4. สถานะไม่ถูกต้อง
+      if (booking.status !== 'pending') {
+        return res.status(400).json({
+          success: false,
+          error: `ไม่สามารถ CheckIn ได้ สถานะปัจจุบันคือ "${booking.status}"`
+        });
+      }
+
+      // 5. CheckIn สำเร็จ
+      booking.status      = 'checked_in';
+      booking.checkinTime = new Date().toISOString();
+
+      // 6. ส่ง Response กลับ
+      return res.status(200).json({
+        success: true,
+        message: `CheckIn สำเร็จ ยินดีต้อนรับ ${booking.fullname}`,
+        data: {
+          bookingId:   booking.id,
+          fullname:    booking.fullname,
+          email:       booking.email,
+          roomtype:    booking.roomtype,
+          roomNumber:  booking.roomNumber,
+          checkin:     booking.checkin,
+          checkout:    booking.checkout,
+          guests:      booking.guests,
+          status:      booking.status,
+          checkinTime: booking.checkinTime
+        }
+      });
+    });
+
+    module.exports = router;
    ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
+![alt text](image-9.png)
    ```
-   บันทึก Code และ รูปผลการทำงาน
+   const express = require('express');
+    const router  = express.Router();
+
+    // ─────────────────────────────────────────────
+    // Mockup Data — จำลองข้อมูลที่ CheckIn แล้ว
+    // ─────────────────────────────────────────────
+    const mockCheckins = [
+      {
+        checkinId:   1001,
+        bookingId:   1,
+        fullname:    'Nattapong Muanprasan',
+        email:       '68030135@kmitl.ac.th',
+        phone:       '0812345678',
+        roomtype:    'standard',
+        roomNumber:  '101',
+        checkin:     '2026-12-01',
+        checkout:    '2026-12-03',
+        guests:      2,
+        status:      'checked_in',
+        checkinTime: '2026-12-01T14:00:00.000Z'
+      },
+      {
+        checkinId:   1002,
+        bookingId:   2,
+        fullname:    'Somchai Jaidee',
+        email:       'somchai@test.com',
+        phone:       '0899999999',
+        roomtype:    'deluxe',
+        roomNumber:  '205',
+        checkin:     '2026-12-05',
+        checkout:    '2026-12-07',
+        guests:      1,
+        status:      'checked_in',
+        checkinTime: '2026-12-05T13:30:00.000Z'
+      },
+      {
+        checkinId:   1003,
+        bookingId:   3,
+        fullname:    'Already CheckedOut',
+        email:       'checkedout@test.com',
+        phone:       '0811111111',
+        roomtype:    'suite',
+        roomNumber:  '301',
+        checkin:     '2026-11-01',
+        checkout:    '2026-11-03',
+        guests:      2,
+        status:      'checked_out',
+        checkinTime: '2026-11-01T14:00:00.000Z',
+        checkoutTime:'2026-11-03T12:00:00.000Z'
+      }
+    ];
+
+    // ── Helper: คำนวณจำนวนคืนและราคา ─────────────
+    const ROOM_PRICE = { standard: 1200, deluxe: 2500, suite: 5000 };
+
+    function calcBill(checkinDate, checkoutDate, roomtype, guests) {
+      const msPerDay   = 1000 * 60 * 60 * 24;
+      const nights     = Math.max(1, Math.round(
+        (new Date(checkoutDate) - new Date(checkinDate)) / msPerDay
+      ));
+      const pricePerNight = ROOM_PRICE[roomtype] || 1200;
+      const roomCharge    = nights * pricePerNight;
+      const guestCharge   = guests > 2 ? (guests - 2) * 300 * nights : 0;
+      const total         = roomCharge + guestCharge;
+      return { nights, pricePerNight, roomCharge, guestCharge, total };
+    }
+
+    // ─────────────────────────────────────────────
+    // POST /api/checkout/:checkinId
+    // CheckOut โดยระบุ CheckIn ID
+    // ─────────────────────────────────────────────
+    router.post('/checkout/:checkinId', (req, res) => {
+      const checkinId = parseInt(req.params.checkinId);
+
+      // 1. หา record จาก mockup
+      const record = mockCheckins.find(r => r.checkinId === checkinId);
+
+      // 2. ไม่พบ checkinId
+      if (!record) {
+        return res.status(404).json({
+          success: false,
+          error: `ไม่พบข้อมูล CheckIn ID ${checkinId}`
+        });
+      }
+
+      // 3. CheckOut ซ้ำ
+      if (record.status === 'checked_out') {
+        return res.status(409).json({
+          success: false,
+          error: 'การจองนี้ CheckOut ไปแล้ว',
+          data: {
+            checkinId:    record.checkinId,
+            fullname:     record.fullname,
+            status:       record.status,
+            checkoutTime: record.checkoutTime
+          }
+        });
+      }
+
+      // 4. สถานะไม่ใช่ checked_in
+      if (record.status !== 'checked_in') {
+        return res.status(400).json({
+          success: false,
+          error: `ไม่สามารถ CheckOut ได้ สถานะปัจจุบันคือ "${record.status}"`
+        });
+      }
+
+      // 5. CheckOut สำเร็จ — อัปเดต mockup
+      record.status       = 'checked_out';
+      record.checkoutTime = new Date().toISOString();
+
+      // 6. คำนวณบิล
+      const bill = calcBill(record.checkin, record.checkout, record.roomtype, record.guests);
+
+      // 7. ส่ง Response กลับ
+      return res.status(200).json({
+        success: true,
+        message: `CheckOut สำเร็จ ขอบคุณที่ใช้บริการ ${record.fullname}`,
+        data: {
+          checkinId:    record.checkinId,
+          bookingId:    record.bookingId,
+          fullname:     record.fullname,
+          email:        record.email,
+          roomtype:     record.roomtype,
+          roomNumber:   record.roomNumber,
+          guests:       record.guests,
+          checkin:      record.checkin,
+          checkout:     record.checkout,
+          checkinTime:  record.checkinTime,
+          checkoutTime: record.checkoutTime,
+          status:       record.status,
+          bill: {
+            nights:         bill.nights,
+            pricePerNight:  bill.pricePerNight,
+            roomCharge:     bill.roomCharge,
+            guestCharge:    bill.guestCharge,
+            total:          bill.total,
+            currency:       'THB'
+          }
+        }
+      });
+    });
+
+    module.exports = router;
    ```
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-
+![alt text](image-10.png)
    ```
-   บันทึก Code และ รูปผลการทำงาน
+   const express = require('express');
+    const router  = express.Router();
+
+    // ─────────────────────────────────────────────
+    // Mockup Data — จำลองข้อมูลที่ CheckOut แล้ว รอ Confirm
+    // ─────────────────────────────────────────────
+    const mockCheckouts = [
+      {
+        checkoutId:   2001,
+        checkinId:    1001,
+        bookingId:    1,
+        fullname:     'Nattapong Muanprasan',
+        email:        '68030135@kmitl.ac.th',
+        phone:        '0812345678',
+        roomtype:     'standard',
+        roomNumber:   '101',
+        guests:       2,
+        checkin:      '2026-12-01',
+        checkout:     '2026-12-03',
+        checkinTime:  '2026-12-01T14:00:00.000Z',
+        checkoutTime: '2026-12-03T11:30:00.000Z',
+        status:       'checked_out',   // รอ confirm
+        bill: {
+          nights:        2,
+          pricePerNight: 1200,
+          roomCharge:    2400,
+          guestCharge:   0,
+          total:         2400,
+          currency:      'THB'
+        }
+      },
+      {
+        checkoutId:   2002,
+        checkinId:    1002,
+        bookingId:    2,
+        fullname:     'Somchai Jaidee',
+        email:        'somchai@test.com',
+        phone:        '0899999999',
+        roomtype:     'deluxe',
+        roomNumber:   '205',
+        guests:       1,
+        checkin:      '2026-12-05',
+        checkout:     '2026-12-07',
+        checkinTime:  '2026-12-05T13:30:00.000Z',
+        checkoutTime: '2026-12-07T10:00:00.000Z',
+        status:       'checked_out',
+        bill: {
+          nights:        2,
+          pricePerNight: 2500,
+          roomCharge:    5000,
+          guestCharge:   0,
+          total:         5000,
+          currency:      'THB'
+        }
+      },
+      {
+        checkoutId:   2003,
+        checkinId:    1003,
+        bookingId:    3,
+        fullname:     'Already Confirmed',
+        email:        'confirmed@test.com',
+        phone:        '0811111111',
+        roomtype:     'suite',
+        roomNumber:   '301',
+        guests:       2,
+        checkin:      '2026-11-01',
+        checkout:     '2026-11-03',
+        checkinTime:  '2026-11-01T14:00:00.000Z',
+        checkoutTime: '2026-11-03T12:00:00.000Z',
+        status:       'completed',     // confirm แล้ว
+        confirmedAt:  '2026-11-03T12:30:00.000Z',
+        bill: {
+          nights:        2,
+          pricePerNight: 5000,
+          roomCharge:    10000,
+          guestCharge:   0,
+          total:         10000,
+          currency:      'THB'
+        }
+      }
+    ];
+
+    // ─────────────────────────────────────────────
+    // POST /api/confirm-checkout/:checkoutId
+    // ยืนยัน CheckOut โดยระบุ Checkout ID
+    // ─────────────────────────────────────────────
+    router.post('/confirm-checkout/:checkoutId', (req, res) => {
+      const checkoutId = parseInt(req.params.checkoutId);
+
+      // 1. หา record จาก mockup
+      const record = mockCheckouts.find(r => r.checkoutId === checkoutId);
+
+      // 2. ไม่พบ checkoutId
+      if (!record) {
+        return res.status(404).json({
+          success: false,
+          error: `ไม่พบข้อมูล Checkout ID ${checkoutId}`
+        });
+      }
+
+      // 3. Confirm ซ้ำ
+      if (record.status === 'completed') {
+        return res.status(409).json({
+          success: false,
+          error: 'การ CheckOut นี้ยืนยันไปแล้ว',
+          data: {
+            checkoutId:  record.checkoutId,
+            fullname:    record.fullname,
+            status:      record.status,
+            confirmedAt: record.confirmedAt
+          }
+        });
+      }
+
+      // 4. สถานะไม่ใช่ checked_out
+      if (record.status !== 'checked_out') {
+        return res.status(400).json({
+          success: false,
+          error: `ไม่สามารถยืนยัน CheckOut ได้ สถานะปัจจุบันคือ "${record.status}"`
+        });
+      }
+
+      // 5. Confirm สำเร็จ — อัปเดต mockup
+      record.status      = 'completed';
+      record.confirmedAt = new Date().toISOString();
+
+      // 6. ส่ง Response กลับ
+      return res.status(200).json({
+        success: true,
+        message: `ยืนยัน CheckOut สำเร็จ ขอบคุณที่ใช้บริการ ${record.fullname}`,
+        data: {
+          checkoutId:   record.checkoutId,
+          checkinId:    record.checkinId,
+          bookingId:    record.bookingId,
+          fullname:     record.fullname,
+          email:        record.email,
+          roomtype:     record.roomtype,
+          roomNumber:   record.roomNumber,
+          guests:       record.guests,
+          checkin:      record.checkin,
+          checkout:     record.checkout,
+          checkinTime:  record.checkinTime,
+          checkoutTime: record.checkoutTime,
+          confirmedAt:  record.confirmedAt,
+          status:       record.status,
+          bill:         record.bill
+        }
+      });
+    });
+
+    module.exports = router;
    ```
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger
+![alt text](image-12.png)
    ```
    
+
    ```
    บันทึกรูปผลการทำงานของ newman
+   
+   ![alt text](image-11.png)
    ```
+
+   
    
 
 ## คำถามท้ายการทดลอง
@@ -1298,7 +1710,9 @@ Assertions หลังเพิ่ม : ______
 **ข้อ 1.** Swagger UI และ Newman ต่างกันอย่างไรในการทดสอบ API ควรใช้เครื่องมือใดในสถานการณ์ใด?
 
 ```
-คำตอบ:
+คำตอบ: Swagger ใช้งานผ่าน web browser จะเห็นหน้าตาของ API เส้นต่างๆเป็น GUI การทดสอบจะทำทีละ enpoint ด้วยการ clik การเช็ดผลลัพธ์จะเช็คด้วยการดูผ่าน Respone
+Newman จะใช้งานผ่าน command line เป็นการ test แบบ autometion เป็นการรัน test หลายตัวพร้อมกัน 
+โดยตรวจสอบผ่าน script แล้วก็ทำ CI/CD ได้
 __________________________________________________________________
 __________________________________________________________________
 ```
@@ -1306,7 +1720,10 @@ __________________________________________________________________
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
-คำตอบ:
+คำตอบ: เป็นการอ้างอิงโดยเริ่มจาก Root ตามด้วย path ที่จะไปยัง Booking $ref = อ้างอิง, # = Root ของไฟล์, /components/schemas/Booking = path ที่จะไปยัง Booking
+ถ้าเราจะสร้าง API การจองและการแก้ไขการจอง
+$ref จะเขียน schema ของ Booking ไว้ที่เดียวแล้วใช้ $ref อ้างอิงที่ API เส้นต่างๆ ถ้าเกิดมีการแก้ไขจุดอื่นก็จะอัปเดตตาม เพราะอ้างอิงจากจุดเดียว
+Inline จะเขียนรายละเอียด schema ใหม่ทุกครั้ง ในแต่ละ API ถ้าจะแก้ไขต้องแก้ตามจุดที่ใส่ schema ไว้
 __________________________________________________________________
 __________________________________________________________________
 ```
@@ -1315,14 +1732,15 @@ __________________________________________________________________
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ: -n 5
+ผลที่ควรระวัง: ถ้าใน Request มีการส่งค่าที่เป็น Unique อย่าง username หรือ email การรันรอบที่ 2 จะ fail เพราะ username และ email ถูกใช้ไปแล้วในการรันรอบแรก
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
-คำตอบ:
+คำตอบ: เขียนก่อน code API เพราะก่อนเขียน Swagger ต้องคิด request/respone structure ก่อนจะได้ไม่ต้องกลับมาแก้ร่วมถึงถ้าทำงานเป็น team frontend สามารถอ่าน Swagger แล้ว dev พร้อมกับ backend ได้เลย 
+ืNewman คสรจะรันทุกครั้งที่มีการเปลี่ยนแปลง code อาจจะทดสอบตั้งแต่ตอนที่ enpoint แต่ละตัวสร้างเสร็จ ก่อนการ commit หรือ ใน CI/CD ให้รันอัตโนมัติทุกครั้งที่มีการ pull request, deploy เพื่อกัน bug ขึ้น production
 __________________________________________________________________
 __________________________________________________________________
 ```
