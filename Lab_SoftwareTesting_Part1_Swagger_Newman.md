@@ -519,12 +519,13 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
 ![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![alt text](images/swagger_ui.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -539,14 +540,19 @@ Token (15 ตัวแรก)     : ______________________________...
 
 | Endpoint | Method | Auth | Expected Code | Actual Code |
 |----------|--------|:----:|:------------:|:-----------:|
-| `/api/bookings` | POST | ❌ | 201 | |
-| `/api/bookings` | GET | ✅ | 200 | |
-| `/api/bookings/1` | GET | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
+| `/api/bookings` | POST | ❌ | 201           | 201 |
+| `/api/bookings` | GET | ✅ | 200            | 200 |
+| `/api/bookings/1` | GET | ✅ | 200 หรือ 404  | 200 |
+| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404  | 200 |
+| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 |200 |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
 ![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![alt text](images/bookings-post.png)
+![alt text](images/booking-get.png)
+![alt text](images/booking-get1.png)
+![alt text](images/bookings-put.png)
+![alt text](images/bookings-delete.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +560,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : "ไม่ได้ส่ง Token มาด้วย___
 ```
 
 ---
@@ -616,6 +622,7 @@ LoginResponse: {
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
 ![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
 > ___
+![alt text](images/loginRespones.png)
 
 ---
 
@@ -655,7 +662,7 @@ app.get('/api/health', (req, res) => {
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
 ![Swagger UI-health check](images/swagger-UI-Response.png)
 > ___
-
+![alt text](images/Swagger-UI-health.png)
 ---
 
 **ข้อ 1.3 — ทดสอบ Token หมดอายุผ่าน Swagger UI**
@@ -670,9 +677,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : "Token หมดอายุหรือลายเซ็นไม่ถูกต้อง"
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 คือไม่มีโทเคน 403 โทเคนหมดอายุ
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1083,15 +1090,15 @@ pm.environment.unset("bookingId");
 
 ```javascript
 // เพิ่มใน Request 5 (GET /api/bookings/:id) ใน create-newman-files.js
-pm.test("____________________________", function() {
+pm.test("Fullname should not be empty by Phakkathon", function() {
   const d = pm.response.json();
-  pm.expect(d.fullname).____________________________; // ตรวจสอบ fullname ไม่ว่าง
+  pm.expect(d.fullname).to.not.be.empty; // ตรวจสอบ fullname ไม่ว่าง
 });
 
 // เพิ่มใน Request 6 (PUT /api/bookings/:id) ใน create-newman-files.js
-pm.test("____________________________", function() {
+pm.test(""Guests should be 3 by Phakkathon"", function() {
   const d = pm.response.json();
-  pm.expect(d.guests).____________________________; // ตรวจสอบ guests = 3
+  pm.expect(d.guests).to.equal(3); // ตรวจสอบ guests = 3
 });
 ```
 
@@ -1122,20 +1129,20 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 7
+Total Assertions   : 18
+Passed             : 18
+Failed             : 0
+Duration           : 258ms
+Average Resp. Time : 13ms
 ```
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
 ![หน้าจอ Newman Report]('images/Newman Report.png')
-
+![alt text](images/newman.png)
 ---
 
 ### 🔧 แบบฝึกหัดที่ 2 — แก้ไขและทดลอง Newman Collection
@@ -1176,8 +1183,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
-
+![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]![alt text](images/name.png)
 > ___
 
 ---
@@ -1201,7 +1207,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png')
+![หน้าจอ Newman Error]![alt text](images/error.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1228,8 +1234,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 18
+Assertions หลังเพิ่ม : 19
 ```
 
 ---
@@ -1259,7 +1265,7 @@ Assertions หลังเพิ่ม : ______
 ```
 
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
-
+![alt text](images/pass.png)
 > ___
 
 ---
@@ -1270,17 +1276,167 @@ Assertions หลังเพิ่ม : ______
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+![alt text](images/ข้อ1.png)
+/**
+ * @swagger
+ * /api/bookings/{id}/checkin:
+ *   post:
+ *     summary: เช็คอินการจองห้องพัก
+ *     description: ทำการ Check-In โดยระบุ ID ของการจอง (Mockup)
+ *     tags:
+ *       - Bookings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจองที่ต้องการ Check-In
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Check-In สำเร็จ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 bookingId:
+ *                   type: integer
+ *                 checkinTime:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ */
+// แก้ไขโดย: ภัคธร ศรีบุ่งง้าว รหัสนักศึกษา 68030223
+app.post('/api/bookings/:id/checkin', (req, res) => {
+    const bookingId = req.params.id;
+    
+    // จำลองข้อมูล Response (Mockup)
+    const mockupResponse = {
+        message: "Check-In สำเร็จเรียบร้อยแล้ว",
+        bookingId: parseInt(bookingId),
+        checkinTime: new Date().toISOString(),
+        status: "checked-in",
+        checkedBy: "ภัคธร ศรีบุ่งง้าว (68030223)" // ใส่ชื่อเพื่อยืนยันความเป็นเจ้าของ API
+    };
+
+    res.status(200).json(mockupResponse);
+});
    ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+   ![alt text](images/ข้อ2.png)
+   /**
+ * @swagger
+ * /api/bookings/{id}/checkout:
+ *   post:
+ *     summary: เช็คเอาท์การจองห้องพัก (โดย ภัคธร)
+ *     tags:
+ *       - Bookings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจองที่ต้องการ Check-Out
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Check-Out สำเร็จ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 bookingId:
+ *                   type: integer
+ *                 checkoutTime:
+ *                   type: string
+ *                 status:
+ *                   type: string
+ *                 totalAmount:
+ *                   type: number
+ *                 checkedOutBy:
+ *                   type: string
+ */
+// แก้ไขโดย: ภัคธร ศรีบุ่งง้าว รหัสนักศึกษา 68030223
+app.post('/api/bookings/:id/checkout', (req, res) => {
+    const bookingId = req.params.id;
+
+    const checkoutMockup = {
+        message: "ดำเนินการ Check-Out เรียบร้อยแล้ว ขอบคุณที่ใช้บริการ",
+        bookingId: parseInt(bookingId),
+        checkoutTime: new Date().toISOString(),
+        status: "completed",
+        totalAmount: 1500.00,
+        checkedOutBy: "ภัคธร ศรีบุ่งง้าว (68030223)"
+    };
+
+    res.status(200).json(checkoutMockup);
+});
    ```
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
    บันทึก Code และ รูปผลการทำงาน
+   ![alt text](images/ข้อ3.png)
+   /**
+ * @swagger
+ * /api/bookings/{id}/confirm-checkout:
+ *   post:
+ *     summary: ยืนยันการเช็คเอาท์และสรุปยอด (โดย ภัคธร)
+ *     tags:
+ *       - Bookings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจองที่ต้องการยืนยัน
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: ยืนยัน Check-Out สำเร็จ
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 bookingId:
+ *                   type: integer
+ *                 paymentStatus:
+ *                   type: string
+ *                 finalStatus:
+ *                   type: string
+ *                 confirmDate:
+ *                   type: string
+ *                 confirmedBy:
+ *                   type: string
+ */
+// แก้ไขโดย: ภัคธร ศรีบุ่งง้าว รหัสนักศึกษา 68030223
+app.post('/api/bookings/:id/confirm-checkout', (req, res) => {
+    const bookingId = req.params.id;
+
+    const confirmResponse = {
+        message: "ยืนยันการ Check-Out และชำระเงินเสร็จสิ้น",
+        bookingId: parseInt(bookingId),
+        paymentStatus: "paid",
+        finalStatus: "closed",
+        confirmDate: new Date().toLocaleString('th-TH'),
+        confirmedBy: "ภัคธร ศรีบุ่งง้าว (68030223)"
+    };
+
+    res.status(200).json(confirmResponse);
+});
    ```
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
