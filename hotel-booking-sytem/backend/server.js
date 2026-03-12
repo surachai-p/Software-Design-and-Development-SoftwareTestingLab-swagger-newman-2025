@@ -53,6 +53,23 @@ const swaggerOptions = {
             created_at: { type: 'string',  example: '2026-01-01T00:00:00.000Z' },
           },
         },
+        LoginResponse: {
+          type: 'object',
+          properties: {
+            token: {
+              type: 'string',
+              description: 'แก้ login Response โดย จิตรเทพ พะชำนิ'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Login Response description โดยใคร
+            },
+            user: {
+              type: 'object',
+              properties: {
+                id:       { type: 'integer' },
+                username: { type: 'string' },
+                role:     { type: 'string', enum: ['admin', 'user'] }
+              }
+            }
+          }
+        }
       },
     },
   },
@@ -119,17 +136,7 @@ const authenticateToken = (req, res, next) => {
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 token:
- *                   type: string
- *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:       { type: integer, example: 1 }
- *                     username: { type: string,  example: admin }
- *                     role:     { type: string,  example: admin }
+ *               $ref: '#/components/schemas/LoginResponse'
  *       400:
  *         description: ไม่ได้ส่ง username หรือ password
  *       401:

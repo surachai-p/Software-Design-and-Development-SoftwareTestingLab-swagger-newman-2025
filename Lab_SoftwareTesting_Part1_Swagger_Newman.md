@@ -614,7 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![alt text](images-Swagger_Newman/image-swagger-UI-Response.png)
 > ___
 
 ---
