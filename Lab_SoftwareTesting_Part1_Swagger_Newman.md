@@ -519,12 +519,13 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : __eyJhbGciOiJIUz___...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+<img width="1327" height="935" alt="image" src="https://github.com/user-attachments/assets/209294a4-4b0e-4750-97ff-19756b927d1b" />
+
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -539,14 +540,15 @@ Token (15 ตัวแรก)     : ______________________________...
 
 | Endpoint | Method | Auth | Expected Code | Actual Code |
 |----------|--------|:----:|:------------:|:-----------:|
-| `/api/bookings` | POST | ❌ | 201 | |
-| `/api/bookings` | GET | ✅ | 200 | |
-| `/api/bookings/1` | GET | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
+| `/api/bookings` | POST | ❌ | 201 | 201 |
+| `/api/bookings` | GET | ✅ | 200 | 200 |
+| `/api/bookings/1` | GET | ✅ | 200 หรือ 404 | 404 |
+| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404 | 404 |
+| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | 404 |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+<img width="940" height="856" alt="image" src="https://github.com/user-attachments/assets/dff5692e-e89a-4db5-9b0d-09d8c9cf6a73" />
+
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +556,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : "error": "กรุณาเข้าสู่ระบบก่อน"
 ```
 
 ---
@@ -615,6 +617,8 @@ LoginResponse: {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
 ![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+<img width="1812" height="396" alt="image" src="https://github.com/user-attachments/assets/c8bc5e01-866b-4e7f-9179-34aa4b40c624" />
+
 > ___
 
 ---
@@ -654,6 +658,8 @@ app.get('/api/health', (req, res) => {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
 ![Swagger UI-health check](images/swagger-UI-Response.png)
+<img width="898" height="786" alt="image" src="https://github.com/user-attachments/assets/70da81f0-34f2-4dd7-bea7-fefed48c83d3" />
+
 > ___
 
 ---
@@ -670,9 +676,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : "error": "Token ไม่ถูกต้องหรือหมดอายุ"
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 คือไม่ได้ส่ง Token (ยังไม่ล็อกอิน) ส่วน 403 คือส่ง Token มาแล้ว แต่ Token หมดอายุหรือไม่ถูกต้อง
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1122,19 +1128,21 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 8
+Total Assertions   : 21
+Passed             : 20
+Failed             : 1
+Duration           : 1260ms
+Average Resp. Time : 55 ms
 ```
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
 ![หน้าจอ Newman Report]('images/Newman Report.png')
+<img width="734" height="968" alt="image" src="https://github.com/user-attachments/assets/239973c7-67f6-4675-b2c7-007eadaa7439" />
+
 
 ---
 
@@ -1177,6 +1185,8 @@ npx newman run newman/hotel-booking-collection.json \
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
 ![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+<img width="1326" height="434" alt="image" src="https://github.com/user-attachments/assets/cde3dceb-26d4-4ea5-9776-8c8f4b34d962" />
+
 
 > ___
 
@@ -1202,6 +1212,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 📸 หน้าจอผล Error:
 
 ![หน้าจอ Newman Error]('images/Newman Error.png')
+<img width="1909" height="1025" alt="image" src="https://github.com/user-attachments/assets/bd5fddc2-07c9-4865-951c-334430c16d65" />
+
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1228,8 +1240,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 21
+Assertions หลังเพิ่ม : 22
 ```
 
 ---
@@ -1259,6 +1271,7 @@ Assertions หลังเพิ่ม : ______
 ```
 
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
+<img width="1095" height="534" alt="image" src="https://github.com/user-attachments/assets/9390c5f6-5f8b-4381-8c25-24cb22fbf19a" />
 
 > ___
 
@@ -1268,64 +1281,57 @@ Assertions หลังเพิ่ม : ______
 
 ## แบบทดสอบ
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-   ```
-   บันทึก Code และ รูปผลการทำงาน
-   ```
+<img width="1073" height="513" alt="image" src="https://github.com/user-attachments/assets/c6c0fd47-7aff-429d-8d30-6d0111693697" />  
+<img width="1006" height="146" alt="image" src="https://github.com/user-attachments/assets/e6bf5040-0fdc-4a32-9821-03c77adf0b92" />
+
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-   ```
-   บันทึก Code และ รูปผลการทำงาน
-   ```
+<img width="1197" height="803" alt="image" src="https://github.com/user-attachments/assets/c5b01d31-8c66-4e7c-add8-3e0be8b300e9" />
+<img width="992" height="150" alt="image" src="https://github.com/user-attachments/assets/198a87e8-8511-431e-83ba-05c943a9325f" />
+
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-
-   ```
-   บันทึก Code และ รูปผลการทำงาน
-   ```
+<img width="1280" height="569" alt="image" src="https://github.com/user-attachments/assets/3ab10ef0-c990-4bac-b478-9fd481dd8a7b" />
+<img width="1101" height="155" alt="image" src="https://github.com/user-attachments/assets/55f76038-4a91-44c7-bede-c3033cdad80a" />
+   
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger
    ```
    
-   ```
    บันทึกรูปผลการทำงานของ newman
-   ```
+   <img width="1643" height="992" alt="image" src="https://github.com/user-attachments/assets/d936c376-8318-4759-a82d-0b07332f79f8" />
+
+   <img width="732" height="821" alt="image" src="https://github.com/user-attachments/assets/3e337b1a-109d-4cb9-b406-461d795a76c1" />
+
    
 
 ## คำถามท้ายการทดลอง
 
 **ข้อ 1.** Swagger UI และ Newman ต่างกันอย่างไรในการทดสอบ API ควรใช้เครื่องมือใดในสถานการณ์ใด?
 
-```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
-```
+Swagger UI: เป็นเครื่องมือทดสอบแบบ Interactive (Manual) เน้นการใช้งานผ่านหน้าเว็บ เหมาะสำหรับ "นักพัฒนา" ใช้ดูโครงสร้าง API และลองกดส่งข้อมูลเพื่อเช็คผลลัพธ์แบบเร็วๆ ในขณะที่กำลังเขียนโค้ด (Development phase)
+Newman: เป็นเครื่องมือทดสอบแบบ Automated ผ่าน Command Line เหมาะสำหรับการทำ "Regression Testing" (การทดสอบซ้ำๆ เพื่อเช็คว่าโค้ดใหม่ไม่ทำของเก่าพัง) และใช้ในระบบ CI/CD เพื่อรันเทสต์ทั้งหมดโดยอัตโนมัติก่อนส่งงานจริง
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
-```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
-```
+ความหมาย: คือการสร้าง "ตัวแปร" หรือ Centralized Schema โดยเป็นการอ้างอิงโครงสร้างข้อมูลจากส่วนกลาง (Components) แทนการเขียนโค้ดซ้ำๆ
+ประโยชน์: ช่วยลดความซ้ำซ้อน (Redundancy) หากมีการแก้ไขโครงสร้างข้อมูล Booking (เช่น เพิ่มฟิลด์ใหม่) เราแก้ไขเพียงจุดเดียวที่ส่วนกลาง แต่ทุก API ที่อ้างอิง $ref นี้จะอัปเดตตามทั้งหมดทันที ทำให้ดูแลโค้ดง่ายขึ้นและลดความผิดพลาด
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
-```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
-```
+คำตอบ: flag ที่ใช้คือ flag ที่ใช้คือ: -n 5 หรือ --iteration-count 5
+ผลที่ควรระวัง: ผลที่ควรระวัง: Data Conflict (ข้อมูลซ้ำ) หรือ Side Effects ในฐานข้อมูล เช่น หาก API ของเรามีการเช็คค่า Email ห้ามซ้ำ การรันรอบที่ 2 จะล้มเหลว (Fail) ทันทีเพราะข้อมูลจากรอบแรกถูกบันทึกไปแล้ว หรือกรณี Delete หากรันซ้ำรอบที่ 2 จะหาข้อมูลไม่เจอทำให้เทสต์ตก
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
-```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
-```
+Swagger: ควรเขียน พร้อมๆ กันหรือก่อน (API-First Design) เพื่อใช้เป็นสัญญา (Contract) ระหว่างคนทำ Backend และ Frontend ให้เข้าใจตรงกันก่อนเริ่มงานจริง
+Newman: ควรรัน ทุกครั้งที่มีการเปลี่ยนแปลงโค้ด (Every Change) และรันในกระบวนการ Automated Build เพื่อตรวจสอบคุณภาพโค้ดอย่างสม่ำเสมอว่าไม่มีข้อผิดพลาดใหม่เกิดขึ้น
 
 ---
 
