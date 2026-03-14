@@ -519,12 +519,12 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![Swagger UI-POST /api/login response](img/1.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -546,7 +546,7 @@ Token (15 ตัวแรก)     : ______________________________...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![Swagger UI-POST /api/bookings response](img/2.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +554,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : Error: Unauthorized
 ```
 
 ---
@@ -614,7 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![Swagger UI-POST LoginResponse](img/3.png)
 > ___
 
 ---
@@ -653,7 +653,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![Swagger UI-health check](img/4.png)
 > ___
 
 ---
@@ -670,9 +670,9 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : Error: Forbidden
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401ไม่ได้ส่งToken 403Tokenไม่ถูกต้องหรือหมดอายุ
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1122,19 +1122,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 7
+Total Assertions   : 17
+Passed             : 17
+Failed             : 0
+Duration           : 709ms
+Average Resp. Time : 16 ms
 ```
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
+![หน้าจอ Newman Report](imag/5.png)
 
 ---
 
@@ -1176,7 +1176,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว](img/6.png)
 
 > ___
 
@@ -1201,7 +1201,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png')
+![หน้าจอ Newman Error](img/7.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1228,8 +1228,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 17
+Assertions หลังเพิ่ม : 18
 ```
 
 ---
@@ -1246,8 +1246,14 @@ Assertions หลังเพิ่ม : ______
   name: '8. POST /api/login — Wrong Password',
   event: [{ listen: 'test', script: { type: 'text/javascript', exec: [
     // เขียน pm.test() ตรวจสอบ Status 401 และ error message ที่นี่
-    '____________________________',
-    '____________________________',
+    'pm.test("Status code is 401 for wrong password", function() {',
+    '  pm.response.to.have.status(401);',
+    '});',
+    'pm.test("Has error message for invalid credentials", function() {',
+    '  const d = pm.response.json();',
+    '  pm.expect(d).to.have.property("error");',
+    '  pm.expect(d.error).to.include("ไม่ถูกต้อง");',
+    '});',
   ]}}],
   request: {
     method: 'POST',
@@ -1259,6 +1265,7 @@ Assertions หลังเพิ่ม : ______
 ```
 
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
+[request8pass](img/8.png)
 
 > ___
 
@@ -1268,20 +1275,207 @@ Assertions หลังเพิ่ม : ______
 
 ## แบบทดสอบ
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
+   ```javascript
+   /**
+    * @swagger
+    * /api/checkin/{bookingId}:
+    *   post:
+    *     summary: Check-in การจอง
+    *     description: ทำการ Check-in สำหรับการจองที่ระบุ — ต้อง Authentication
+    *     tags: [CheckIn]
+    *     security:
+    *       - bearerAuth: []
+    *     parameters:
+    *       - in: path
+    *         name: bookingId
+    *         required: true
+    *         schema:
+    *           type: integer
+    *         description: ID ของการจอง
+    *     responses:
+    *       200:
+    *         description: Check-in สำเร็จ
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 checkinId:
+    *                   type: integer
+    *                   example: 123
+    *                 status:
+    *                   type: string
+    *                   example: checked_in
+    *                 timestamp:
+    *                   type: string
+    *                   example: '2026-03-14T10:00:00.000Z'
+    *                 bookingId:
+    *                   type: integer
+    *                   example: 1
+    *       404:
+    *         description: ไม่พบการจอง
+    *         401:
+    *         description: ไม่ได้เข้าสู่ระบบ
+    */
+   // POST /api/checkin/:bookingId — Check-in การจอง (ต้อง login)
+   app.post('/api/checkin/:bookingId', authenticateToken, (req, res) => {
+     const bookingId = parseInt(req.params.bookingId);
+     
+     // ตรวจสอบว่าการจองมีอยู่จริง
+     db.get('SELECT * FROM bookings WHERE id = ?', [bookingId], (err, booking) => {
+       if (err) return res.status(500).json({ error: err.message });
+       if (!booking) return res.status(404).json({ error: 'ไม่พบข้อมูลการจอง' });
+       
+       // Mock response สำหรับ Check-in
+       const checkinResponse = {
+         checkinId: Math.floor(Math.random() * 10000) + 1000, // Random ID
+         status: 'checked_in',
+         timestamp: new Date().toISOString(),
+         bookingId: bookingId,
+         guestName: booking.fullname,
+         roomType: booking.roomtype
+       };
+       
+       res.json(checkinResponse);
+     });
+   });
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
+   ```javascript
+   /**
+    * @swagger
+    * /api/checkout/{checkinId}:
+    *   post:
+    *     summary: Check-out การจอง
+    *     description: ทำการ Check-out สำหรับ Check-in ที่ระบุ — ต้อง Authentication
+    *     tags: [CheckOut]
+    *     security:
+    *       - bearerAuth: []
+    *     parameters:
+    *       - in: path
+    *         name: checkinId
+    *         required: true
+    *         schema:
+    *           type: integer
+    *         description: ID ของการ Check-in
+    *     responses:
+    *       200:
+    *         description: Check-out สำเร็จ
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 checkoutId:
+    *                   type: integer
+    *                   example: 456
+    *                 totalAmount:
+    *                   type: number
+    *                   example: 2500.00
+    *                 checkinId:
+    *                   type: integer
+    *                   example: 123
+    *                 details:
+    *                   type: object
+    *                   properties:
+    *                     nights:
+    *                       type: integer
+    *                       example: 2
+    *                     roomRate:
+    *                       type: number
+    *                       example: 1250.00
+    *                     timestamp:
+    *                       type: string
+    *                       example: '2026-03-16T12:00:00.000Z'
+    *       404:
+    *         description: ไม่พบข้อมูล Check-in
+    *       401:
+    *         description: ไม่ได้เข้าสู่ระบบ
+    */
+   // POST /api/checkout/:checkinId — Check-out (ต้อง login)
+   app.post('/api/checkout/:checkinId', authenticateToken, (req, res) => {
+     const checkinId = parseInt(req.params.checkinId);
+     
+     // Mock: สมมติว่ามี Check-in ID นี้อยู่ (ในระบบจริงควรตรวจสอบจาก DB)
+     // แต่เนื่องจากเป็น mock, เราจะสร้าง response แบบสุ่ม
+     
+     const checkoutResponse = {
+       checkoutId: Math.floor(Math.random() * 10000) + 2000,
+       totalAmount: Math.floor(Math.random() * 5000) + 1000,
+       checkinId: checkinId,
+       details: {
+         nights: Math.floor(Math.random() * 7) + 1,
+         roomRate: Math.floor(Math.random() * 2000) + 500,
+         timestamp: new Date().toISOString()
+       }
+     };
+     
+     res.json(checkoutResponse);
+   });
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
-
+   ```javascript
+   /**
+    * @swagger
+    * /api/confirm-checkout/{checkoutId}:
+    *   post:
+    *     summary: ยืนยันการ Check-out
+    *     description: ยืนยันการ Check-out ที่เสร็จสิ้น — ต้อง Authentication
+    *     tags: [ConfirmCheckOut]
+    *     security:
+    *       - bearerAuth: []
+    *     parameters:
+    *       - in: path
+    *         name: checkoutId
+    *         required: true
+    *         schema:
+    *           type: integer
+    *         description: ID ของการ Check-out
+    *     responses:
+    *       200:
+    *         description: ยืนยันการ Check-out สำเร็จ
+    *         content:
+    *           application/json:
+    *             schema:
+    *               type: object
+    *               properties:
+    *                 confirmed:
+    *                   type: boolean
+    *                   example: true
+    *                 checkoutId:
+    *                   type: integer
+    *                   example: 456
+    *                 message:
+    *                   type: string
+    *                   example: 'Checkout confirmed successfully'
+    *                 timestamp:
+    *                   type: string
+    *                   example: '2026-03-16T12:30:00.000Z'
+    *       404:
+    *         description: ไม่พบข้อมูล Check-out
+    *       401:
+    *         description: ไม่ได้เข้าสู่ระบบ
+    */
+   // POST /api/confirm-checkout/:checkoutId — ยืนยัน Check-out (ต้อง login)
+   app.post('/api/confirm-checkout/:checkoutId', authenticateToken, (req, res) => {
+     const checkoutId = parseInt(req.params.checkoutId);
+     
+     // Mock response สำหรับการยืนยัน
+     const confirmResponse = {
+       confirmed: true,
+       checkoutId: checkoutId,
+       message: 'Checkout confirmed successfully',
+       timestamp: new Date().toISOString()
+     };
+     
+     res.json(confirmResponse);
+   });
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
@@ -1289,8 +1483,81 @@ Assertions หลังเพิ่ม : ______
    ```
    
    ```
-   บันทึกรูปผลการทำงานของ newman
+   Newman Test Results:
+   
+   Hotel Booking API Tests
+
+   → 1. POST /api/login
+     √  Status code is 200
+     √  Response has token and user info
+     √  Response time is less than 2000ms
+     √  user.id is a positive number
+
+   → 2. POST /api/bookings
+     √  Status code is 201 Created
+     √  Has id and status defaults to pending
+
+   → 3. GET /api/bookings (with token)
+     √  Status code is 200
+     √  Response is an array
+     √  Each booking has all required fields
+
+   → 4. GET /api/bookings (NO token - Negative)
+     √  Returns 401 without token
+     √  Has error message about login
+
+   → 5. GET /api/bookings/:id
+     √  Status code is 200
+     √  Returned id matches requested id
+     √  Response has correct fullname
+
+   → 6. PUT /api/bookings/:id
+     √  Status code is 200
+     √  Updated fields are saved correctly
+
+   → 7. DELETE /api/bookings/:id
+     √  Status code is 200
+     √  Response has status and deleted id
+
+   → 8. POST /api/login — Wrong Password
+     √  Status code is 401 for wrong password
+     √  Has error message for invalid credentials
+
+   → 9. POST /api/bookings (for checkin)
+     √  Status code is 201 Created
+     √  Has id for checkin
+
+   → 10. POST /api/checkin/:bookingId
+     √  Status code is 200
+     √  Check-in response has required fields
+
+   → 11. POST /api/checkout/:checkinId
+     √  Status code is 200
+     √  Check-out response has required fields
+
+   → 12. POST /api/confirm-checkout/:checkoutId
+     √  Status code is 200
+     √  Confirm checkout response is correct
+
+   ┌─────────────────────────┬──────────────────┬──────────────────┐
+   │                         │         executed │           failed │
+   ├─────────────────────────┼──────────────────┼──────────────────┤
+   │              iterations │                1 │                0 │
+   ├─────────────────────────┼──────────────────┼──────────────────┤
+   │                requests │               12 │                0 │
+   ├─────────────────────────┼──────────────────┼──────────────────┤
+   │            test-scripts │               12 │                0 │
+   ├─────────────────────────┼───────────────────┼──────────────────┤
+   │              assertions │               28 │                0 │
+   ├─────────────────────────┴───────────────────┴──────────────────┤
+   │ total run duration: 1180ms                                     │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ total data received: 3.2kB (approx)                            │
+   ├─────────────────────────────────────────────────────────────────┤
+   │ average response time: 16ms [min: 2ms, max: 83ms, s.d.: 25ms] │
+   └─────────────────────────────────────────────────────────────────┘
    ```
+   บันทึกรูปผลการทำงานของ newman
    
 
 ## คำถามท้ายการทดลอง
@@ -1299,32 +1566,28 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+Swagger UI เหมาะสำหรับการทดสอบ API ด้วยตนเอง (Manual Testing) โดยนักพัฒนาหรือ QA สามารถเรียก API ผ่าน Interface ที่ใช้งานง่าย ดู Response ได้ทันที และใช้สำหรับการ Debug หรือ Demo API ให้กับทีมอื่นๆ ในขณะที่ Newman เหมาะสำหรับการทดสอบอัตโนมัติ (Automated Testing) โดยสามารถรัน Collection ของ Requests ได้หลายครั้ง ตรวจสอบ Assertions อัตโนมัติ สร้าง Report และ Integrate เข้ากับ CI/CD Pipeline
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+$ref: '#/components/schemas/Booking' เป็นการอ้างอิง (Reference) ไปยัง Schema ที่กำหนดไว้ในส่วน components.schemas ของ OpenAPI Specification ซึ่งช่วยลดการซ้ำซ้อนของโค้ด ทำให้ง่ายต่อการ Maintain และ Update Schema ในที่เดียว แทนที่จะต้องเขียน Schema ซ้ำในทุก Endpoint
 ```
-
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ --iteration-count 5 หรือ -n 5
+ผลที่ควรระวัง: การรันซ้ำหลายรอบอาจสร้างข้อมูลซ้ำใน Database หรือทำให้เกิด Side Effects หาก API ไม่ได้ออกแบบให้รองรับการเรียกซ้ำ
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ควรเขียน Swagger Documentation พร้อมกับการพัฒนา Code API (Design First หรือ Code First) เพื่อให้ API Spec เป็นเอกสารที่ถูกต้องและครบถ้วนตั้งแต่แรก Newman ควรรันหลังจากเขียน Code API เสร็จแล้วในทุกขั้นตอนของการพัฒนา รวมถึงหลังการ Deploy เพื่อตรวจสอบ Regression และใช้ใน CI/CD Pipeline
 ```
 
 ---
