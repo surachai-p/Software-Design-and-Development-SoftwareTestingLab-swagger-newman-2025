@@ -524,7 +524,7 @@ Token (15 ตัวแรก)     : eyJhbGciOiJIUzI...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png) ![alt text](../pictures/res.png)
+![Swagger UI-POST /api/login response](images/swagger-UI-Response.png) ![alt text](pictures/res.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -546,7 +546,7 @@ Token (15 ตัวแรก)     : eyJhbGciOiJIUzI...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png') ![alt text](../pictures/res2.png)
+![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png') ![alt text](pictures/res2.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -614,8 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png) ![alt text](../pictures/log.png)
-> ___
+![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png) ![alt text](pictures/log.png)
 
 ---
 
@@ -653,8 +652,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png) ![alt text](../pictures/h.png) ![alt text](../pictures/h1.png)
-> ___
+![Swagger UI-health check](images/swagger-UI-Response.png) ![alt text](pictures/h.png) ![alt text](pictures/h1.png)
 
 ---
 
@@ -1133,7 +1131,7 @@ Average Resp. Time : 17ms [min: 2ms, max: 86ms, s.d.: 28ms]
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่ 
-![alt text](../pictures/re.png)
+![alt text](pictures/re.png)
 ![หน้าจอ Newman Report]('images/Newman Report.png')
 
 ---
@@ -1176,7 +1174,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png') ![alt text](../pictures/re1.png)
+![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png') ![alt text](pictures/re1.png)
 
 > ___
 
@@ -1201,7 +1199,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png') ![alt text](../pictures/re2.png) ![alt text](../pictures/re3.png)
+![หน้าจอ Newman Error]('images/Newman Error.png') ![alt text](pictures/re2.png) ![alt text](pictures/re3.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1258,7 +1256,7 @@ Assertions หลังเพิ่ม : 19
 }
 ```
 
-📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass): ![alt text](../pictures/re8.png)
+📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass): ![alt text](pictures/re8.png)
 
 > ___
 
@@ -1312,7 +1310,7 @@ app.post('/api/bookings/:id/checkin', (req, res) => {
   }
 });
 ```
-   ![alt text](../pictures/api1.png)
+   ![alt text](pictures/api1.png)
 
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
@@ -1354,7 +1352,7 @@ app.post('/api/bookings/:id/checkout', (req, res) => {
   }
 });
 ```
-   ![alt text](../pictures/api2.png)
+  ![alt text](pictures/api2.png)
 
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
@@ -1397,17 +1395,17 @@ app.post('/api/bookings/:id/confirm-checkout', (req, res) => {
   }
 });
 ```
-   ![alt text](../pictures/api3.png)
+   ![alt text](pictures/api3.png)
 
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger 
    ```
-   ![alt text](../pictures/api5.png)
+   ![alt text](pictures/api5.png)
    ```
    บันทึกรูปผลการทำงานของ newman
    ```
-   ![alt text](../pictures/api4.png)
+   ![alt text](pictures/api4.png)
 
 ## คำถามท้ายการทดลอง
 
