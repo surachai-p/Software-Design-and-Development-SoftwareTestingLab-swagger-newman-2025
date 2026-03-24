@@ -519,12 +519,12 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![alt text](image.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -546,16 +546,15 @@ Token (15 ตัวแรก)     : ______________________________...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
----
+![alt text](image-1.png)
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
 
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : {  "error": "กรุณาเข้าสู่ระบบก่อน"}
 ```
 
 ---
@@ -614,7 +613,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![Swagger UI-POST LoginResponse]![alt text](image-3.png)
 > ___
 
 ---
@@ -653,7 +652,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![Swagger UI-health check]![alt text](image-2.png)
 > ___
 
 ---
@@ -1134,8 +1133,7 @@ Average Resp. Time : ______________________________ ms
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
-
+![alt text](image-4.png)
 ---
 
 ### 🔧 แบบฝึกหัดที่ 2 — แก้ไขและทดลอง Newman Collection
@@ -1176,7 +1174,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]![alt text](image-5.png)
 
 > ___
 
@@ -1201,8 +1199,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png')
-
+![หน้าจอ Newman Error]![alt text](image-6.png)
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
 
@@ -1228,8 +1225,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 14
+Assertions หลังเพิ่ม : 16
 ```
 
 ---
@@ -1269,23 +1266,27 @@ Assertions หลังเพิ่ม : ______
 ## แบบทดสอบ
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
-   บันทึก Code และ รูปผลการทำงาน
+ ![alt text](image-9.png)
+ ![alt text](image-8.png)
    ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
-   บันทึก Code และ รูปผลการทำงาน
+![alt text](image-7.png)
+![alt text](image-10.png)
    ```
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
-   บันทึก Code และ รูปผลการทำงาน
+![alt text](image-11.png)
    ```
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
-   บันทึกรูปผลการทำงานของ Swagger
+   ![alt text](image-14.png)
+   ![alt text](image-13.png)
+   ![alt text](image-12.png)
    ```
    
    ```
@@ -1299,32 +1300,38 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+Swagger UI เป็นเครื่องมือสำหรับ ทดสอบ API แบบ Interactive ผ่านหน้าเว็บ เหมาะสำหรับการลองยิง API ทีละตัว ดู request/response และอธิบาย documentation ได้ง่าย เหมาะกับช่วงพัฒนาและ debug
+
+ส่วน Newman เป็นเครื่องมือสำหรับ รันชุดทดสอบ (Collection) แบบอัตโนมัติ ผ่าน command line เหมาะสำหรับการทดสอบหลาย API พร้อมกัน ตรวจสอบความถูกต้อง และใช้ในงาน automation หรือ CI/CD
+
+ดังนั้น Swagger UI เหมาะสำหรับการทดสอบแบบ manual และเรียนรู้ API ส่วน Newman เหมาะสำหรับการทดสอบแบบอัตโนมัติและตรวจสอบระบบโดยรวม
+
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+$ref: '#/components/schemas/Booking' หมายถึงการ อ้างอิง schema ที่ถูกกำหนดไว้ใน components.schemas แทนการเขียนโครงสร้างข้อมูลใหม่
+
+ข้อดีคือช่วยให้ ลดความซ้ำซ้อนของโค้ด, แก้ไขง่าย (แก้ที่เดียวมีผลทุกที่), และทำให้ documentation เป็นระเบียบมากขึ้น เมื่อเทียบกับการเขียน schema แบบ inline ที่ต้องเขียนซ้ำทุก endpoint
 ```
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ -n 5
+ผลที่ควรระวัง: การรันซ้ำหลายรอบอาจทำให้ข้อมูลในระบบ ซ้ำหรือเพี้ยน เช่น การสร้าง booking ซ้ำหลายรายการ หรือค่า id เปลี่ยนไป ทำให้ test บางตัว fail ได้ และอาจกระทบกับฐานข้อมูล
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ควรเขียน Swagger Documentation หลังจากออกแบบ API หรือทำไปพร้อมกับการพัฒนา API เพื่อให้โครงสร้างตรงกัน และช่วยให้ทดสอบได้ง่ายขึ้น
+
+ส่วน Newman ควรใช้ในขั้นตอน หลังจากพัฒนา API เสร็จในแต่ละส่วน หรือก่อน deploy เพื่อทดสอบความถูกต้องของระบบแบบอัตโนมัติ และตรวจสอบว่า API ทุกตัวทำงานได้ถูกต้องร่วมกัน
 ```
 
 ---
