@@ -506,7 +506,7 @@ npm run dev
 
 > 📌 **รูปที่ 3 — ขั้นตอนการใช้ Swagger UI ทดสอบ Protected API**
 
-![Swagger UI](images/swagger-UI-testing.png)
+![alt text](image.png)
 ---
 
 **ทดลองตามลำดับ:**
@@ -519,13 +519,12 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 	Details
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9....
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
----
+![alt text](image-1.png)
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
 
@@ -546,16 +545,19 @@ Token (15 ตัวแรก)     : ______________________________...
 | `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
----
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
 
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 403
+Error message ที่ได้รับ        : "กรุณาเข้าสู่ระบบก่อน"
 ```
 
 ---
@@ -576,7 +578,7 @@ LoginResponse: {
   properties: {
     token: {
       type: 'string',
-      description: '___________'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Login Response description โดยใคร
+      description: 'อนาวิล บุญช่วย'  // ← แก้ไข description เป็นการระบุว่า แก้ไข Login Response description โดยใคร
     },
     user: {
       type: 'object',
@@ -615,6 +617,7 @@ LoginResponse: {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
 ![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![alt text](image-7.png)
 > ___
 
 ---
@@ -654,6 +657,7 @@ app.get('/api/health', (req, res) => {
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
 ![Swagger UI-health check](images/swagger-UI-Response.png)
+![alt text](image-8.png)
 > ___
 
 ---
@@ -670,9 +674,10 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : 403
+Error message                    : { "error": "Token ไม่ถูกต้องหรือหมดอายุ"}
+ข้อแตกต่างระหว่าง 401 กับ 403   : - 401 Unauthorized (ไม่ได้รับอนุญาต): หมายถึงไม่มีการยืนยันตัวตน เช่น ไม่ได้ส่ง Token มาเลย หรือระบบไม่รู้จักผู้ใช้นี้
+  - 403 Forbidden (ถูกปฏิเสธ): หมายถึงเซิร์ฟเวอร์รู้จักผู้ใช้นี้ (ส่ง Token มา) แต่ปฏิเสธการเข้าถึง เพราะ Token นั้นหมดอายุไปแล้ว หรือ User ไม่มีสิทธิ์ใช้งานในส่วนนั้น
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1122,19 +1127,20 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 8
+Total Assertions   : 20
+Passed             : 20
+Failed             : 0
+Duration           : [ดูช่อง total run duration ในหน้าจอของคุณ เช่น 961ms]
+Average Resp. Time : [ดูบรรทัด average response time ในหน้าจอของคุณ เช่น 33] ms
 ```
 
 ![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
 ![หน้าจอ Newman Report]('images/Newman Report.png')
+![alt text](image-9.png)
 
 ---
 
@@ -1151,8 +1157,8 @@ Average Resp. Time : ______________________________ ms
 
 ```javascript
 raw: JSON.stringify({
-  fullname: 'ชื่อ-นามสกุลนักศึกษา',           // ← แก้ตรงนี้
-  email:    'รหัสนักศึกษา@university.ac.th',  // ← แก้ตรงนี้
+  fullname: 'นายอนาวิล บุญช่วย',           // ← แก้ตรงนี้
+  email:    '68030311า@university.ac.th',  // ← แก้ตรงนี้
   phone:    '0812345678',
   checkin:  '2026-12-01', 
   checkout: '2026-12-03',
@@ -1177,6 +1183,7 @@ npx newman run newman/hotel-booking-collection.json \
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
 ![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![alt text](image-10.png)
 
 > ___
 
@@ -1228,8 +1235,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 20
+Assertions หลังเพิ่ม : 24
 ```
 
 ---
@@ -1276,18 +1283,18 @@ Assertions หลังเพิ่ม : ______
    ```
    บันทึก Code และ รูปผลการทำงาน
    ```
-   
+   ![alt text](image-11.png)
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
    บันทึก Code และ รูปผลการทำงาน
    ```
-      
+      ![alt text](image-12.png)
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger
    ```
-   
+   ![alt text](image-13.png)
    ```
    บันทึกรูปผลการทำงานของ newman
    ```
@@ -1299,32 +1306,27 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
-```
+หมายถึงการ "อ้างอิง" (Reference) ไปยัง Schema โครงสร้างข้อมูลชื่อ Booking ที่เขียนแยกไว้ ประโยชน์คือช่วยลดความซ้ำซ้อนของโค้ด หากต้องการเพิ่ม/ลดฟิลด์ข้อมูล ก็แก้ที่ Schema แค่จุดเดียว API ทุกเส้นที่อ้างอิงถึงก็จะอัปเดตตามทันที ทำให้จัดการง่ายกว่าการเขียนแบบ Inline
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
-คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
-```
+คำตอบ: flag ที่ใช้คือ  -n 5  (หรือ --iteration-count 5)
+ผลที่ควรระวัง: การใช้คำสั่ง POST (สร้างข้อมูลใหม่) ซ้ำๆ จะทำให้เกิดข้อมูลขยะในฐานข้อมูล หรืออาจเกิด Error ขึ้นได้หากฐานข้อมูลมีการตั้งค่าห้ามข้อมูลซ้ำ (Unique Constraint)
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
-```
+คำตอบ: flag ที่ใช้คือ  -n 5  (หรือ --iteration-count 5)
+ผลที่ควรระวัง: การใช้คำสั่ง POST (สร้างข้อมูลใหม่) ซ้ำๆ จะทำให้เกิดข้อมูลขยะในฐานข้อมูล หรืออาจเกิด Error ขึ้นได้หากฐานข้อมูลมีการตั้งค่าห้ามข้อมูลซ้ำ (Unique Constraint)
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+- Swagger Documentation ควรเขียน "ก่อน" หรือ "พร้อมกับ" การเขียน Code เพื่อใช้เป็นข้อตกลงและช่วยให้เห็นภาพรวมของระบบได้ชัดเจนขึ้น
+- Newman ควรรัน "หลัง" จากเขียน Code ในแต่ละส่วนเสร็จ เพื่อทดสอบความถูกต้อง และควรรันซ้ำทุกครั้งที่มีการแก้ไข Code เพื่อป้องกันการเกิดบัคกระทบกับส่วนอื่น
 ```
 
 ---
