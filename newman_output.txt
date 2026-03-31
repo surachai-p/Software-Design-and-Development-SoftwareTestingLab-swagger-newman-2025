@@ -1,0 +1,182 @@
+newman
+
+Hotel Booking API Tests
+
+→ 1. POST /api/login
+  POST http://localhost:9999/api/login [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+  2. Status code is 200
+  3. Response has token and user info
+  4. Response time is less than 2000ms
+
+→ 2. POST /api/bookings
+  POST http://localhost:9999/api/bookings [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+  6. Status code is 201 Created
+  7. Has id and status defaults to pending
+
+→ 3. GET /api/bookings (with token)
+  GET http://localhost:9999/api/bookings [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+  9. Status code is 200
+ 10. Response is an array
+ 11. Each booking has all required fields
+
+→ 4. GET /api/bookings (NO token - Negative)
+  GET http://localhost:9999/api/bookings [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+ 13. Returns 401 without token
+ 14. Has error message about login
+
+→ 5. GET /api/bookings/:id
+  GET http://localhost:9999/api/bookings/ [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+ 16. Status code is 200
+ 17. Returned id matches requested id
+
+→ 6. PUT /api/bookings/:id
+  PUT http://localhost:9999/api/bookings/ [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+ 19. Status code is 200
+ 20. Updated fields are saved correctly
+
+→ 7. DELETE /api/bookings/:id
+  DELETE http://localhost:9999/api/bookings/ [errored]
+     connect ECONNREFUSED 127.0.0.1:9999
+ 22. Status code is 200
+ 23. Response has message and deleted id
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        7 │        7 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        7 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │       16 │       16 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 676ms                     │
+├───────────────────────────────────────────────┤
+│ total data received: 0B (approx)              │
+└───────────────────────────────────────────────┘
+
+[31m   # [39m[31m failure        [39m[31m detail                                                   [39m
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 01.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 02.  AssertionError  Status code is 200                                       
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "1. POST /api/login"                              
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 03.  JSONError       Response has token and user info                         
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "1. POST /api/login"                              
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 04.  AssertionError  Response time is less than 2000ms                        
+                      expected undefined to be a number or a date              
+                      at assertion:2 in test-script                            
+                      inside "1. POST /api/login"                              
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 05.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 06.  AssertionError  Status code is 201 Created                               
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "2. POST /api/bookings"                           
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 07.  JSONError       Has id and status defaults to pending                    
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "2. POST /api/bookings"                           
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 08.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 09.  AssertionError  Status code is 200                                       
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "3. GET /api/bookings (with token)"               
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 10.  JSONError       Response is an array                                     
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "3. GET /api/bookings (with token)"               
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 11.  JSONError       Each booking has all required fields                     
+                      "undefined" is not valid JSON                            
+                      at assertion:2 in test-script                            
+                      inside "3. GET /api/bookings (with token)"               
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 12.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 13.  AssertionError  Returns 401 without token                                
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "4. GET /api/bookings (NO token - Negative)"      
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 14.  JSONError       Has error message about login                            
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "4. GET /api/bookings (NO token - Negative)"      
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 15.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 16.  AssertionError  Status code is 200                                       
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "5. GET /api/bookings/:id"                        
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 17.  JSONError       Returned id matches requested id                         
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "5. GET /api/bookings/:id"                        
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 18.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 19.  AssertionError  Status code is 200                                       
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "6. PUT /api/bookings/:id"                        
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 20.  JSONError       Updated fields are saved correctly                       
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "6. PUT /api/bookings/:id"                        
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 21.  Error                                                                    
+                      connect ECONNREFUSED 127.0.0.1:9999                      
+                      at request                                               
+                      inside ""                                                
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 22.  AssertionError  Status code is 200                                       
+                      expected PostmanResponse{ …(5) } to have property 'code' 
+                      at assertion:0 in test-script                            
+                      inside "7. DELETE /api/bookings/:id"                     
+[90m     [39m[90m                [39m[90m                                                          [39m
+ 23.  JSONError       Response has message and deleted id                      
+                      "undefined" is not valid JSON                            
+                      at assertion:1 in test-script                            
+                      inside "7. DELETE /api/bookings/:id"                     

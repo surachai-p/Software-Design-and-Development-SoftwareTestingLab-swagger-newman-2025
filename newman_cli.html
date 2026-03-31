@@ -1,0 +1,61 @@
+<html><body style="background:#000;color:#0f0;font-family:monospace;white-space:pre-wrap;padding:20px;">newman
+
+Hotel Booking API Tests
+
+→ 1. POST /api/login
+  POST http://localhost:3001/api/login [200 OK, 513B, 150ms]
+  √  Status code is 200
+  √  Response has token and user info
+  √  Response time is less than 2000ms
+
+→ 2. POST /api/bookings
+  POST http://localhost:3001/api/bookings [201 Created, 516B, 13ms]
+  √  Status code is 201 Created
+  √  Has id and status defaults to pending
+
+→ 3. GET /api/bookings (with token)
+  GET http://localhost:3001/api/bookings [200 OK, 1.53kB, 5ms]
+  √  Status code is 200
+  √  Response is an array
+  √  Each booking has all required fields
+
+→ 4. GET /api/bookings (NO token - Negative)
+  GET http://localhost:3001/api/bookings [401 Unauthorized, 349B, 2ms]
+  √  Returns 401 without token
+  √  Has error message about login
+
+→ 5. GET /api/bookings/:id
+  GET http://localhost:3001/api/bookings/12 [200 OK, 511B, 4ms]
+  √  Status code is 200
+  √  Returned id matches requested id
+
+→ 6. PUT /api/bookings/:id
+  PUT http://localhost:3001/api/bookings/12 [200 OK, 571B, 12ms]
+  √  Status code is 200
+  √  Updated fields are saved correctly
+
+→ 7. DELETE /api/bookings/:id
+  DELETE http://localhost:3001/api/bookings/12 [200 OK, 333B, 11ms]
+  √  Status code is 200
+  √  Response has message and deleted id
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                 7 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 0 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │                16 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 791ms                                      │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 2.43kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 28ms [min: 2ms, max: 150ms, s.d.: 49ms] │
+└────────────────────────────────────────────────────────────────┘
+</body></html>
