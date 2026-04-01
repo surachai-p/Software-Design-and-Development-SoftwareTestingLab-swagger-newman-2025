@@ -524,8 +524,10 @@ Token (15 ตัวแรก)     : ______________________________...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
+--- ![alt text](image.png)
+
 ![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
----
+--- ![alt text](image.png)
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
 
@@ -547,7 +549,7 @@ Token (15 ตัวแรก)     : ______________________________...
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
 ![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
----
+--- ![alt text](image-1.png)
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
 
@@ -617,7 +619,7 @@ LoginResponse: {
 ![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
 > ___
 
----
+--- 
 
 **ข้อ 1.2 — เพิ่ม Health Check Endpoint**
 
@@ -656,8 +658,7 @@ app.get('/api/health', (req, res) => {
 ![Swagger UI-health check](images/swagger-UI-Response.png)
 > ___
 
----
-
+--- 
 **ข้อ 1.3 — ทดสอบ Token หมดอายุผ่าน Swagger UI**
 
 แก้ `expiresIn` ชั่วคราวใน `server.js`:
@@ -1270,18 +1271,259 @@ Assertions หลังเพิ่ม : ______
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
+   ``` // server.js
+// 🔹 สร้าง API สำหรับ Hotel Booking + Check-In
+// 🔹 แก้ไขโดย: นางสาว ฐิติกานต์ ประสิทธิ์
+
+const express = require('express');
+const app = express();
+app.use(express.json());
+
+// ── Mock Data ─────────────────────────────
+let bookings = [
+  {
+    id: 1,
+    customerName: "John Doe",
+    room: "A101",
+    status: "booked"
+  },
+  {
+    id: 2,
+    customerName: "Jane Smith",
+    room: "B202",
+    status: "booked"
+  }
+];
+
+// ── API Endpoints ─────────────────────────
+
+// GET /api/bookings  -> ดู booking ทั้งหมด
+app.get('/api/bookings', (req, res) => {
+  res.json(bookings);
+});
+
+// POST /api/bookings -> สร้าง booking ใหม่
+app.post('/api/bookings', (req, res) => {
+  const { customerName, room } = req.body;
+  const newBooking = {
+    id: bookings.length + 1,
+    customerName,
+    room,
+    status: "booked"
+  };
+  bookings.push(newBooking);
+  res.status(201).json(newBooking);
+});
+
+// POST /api/bookings/:id/checkin -> Check-In
+/**
+ * @swagger
+ * /api/bookings/{id}/checkin:
+ *   post:
+ *     summary: Check-in การจอง
+ *     description: ใช้สำหรับ Check-in โดยใช้ Booking ID
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจอง
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Check-in สำเร็จ
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: success
+ *               message: Check-in สำเร็จ
+ *               data:
+ *                 id: 1
+ *                 customerName: John Doe
+ *                 room: A101
+ *                 status: checked-in
+ *                 checkInTime: 2026-04-01T13:00:00Z
+ *       404:
+ *         description: ไม่พบข้อมูลการจอง
+ */
+
+// 👇 แก้ไขโดย: นางสาวฐิติกานต์ ประสิทธิ์ 68030072
+app.post('/api/bookings/:id/checkin', (req, res) => {
+  const id = parseInt(req.params.id);
+  const booking = bookings.find(b => b.id === id);
+
+  if (!booking) {
+    return res.status(404).json({
+      status: "error",
+      message: "ไม่พบข้อมูลการจอง"
+    });
+  }
+
+  // ❗ เช็คว่าเคย Check-in แล้วหรือยัง
+  if (booking.status === "checked-in") {
+    return res.status(400).json({
+      status: "error",
+      message: "ลูกค้า Check-in ไปแล้ว"
+    });
+  }
+
+  // อัปเดตสถานะ
+  booking.status = "checked-in";
+  booking.checkInTime = new Date();
+
+  res.json({
+    status: "success",
+    message: "Check-in สำเร็จ",
+    data: booking
+  });
+});
+
+// ── Start Server ─────────────────────────
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
+   ``` // POST /api/bookings/:id/checkout -> Check-Out
+/**
+ * @swagger
+ * /api/bookings/{id}/checkout:
+ *   post:
+ *     summary: Check-out การจอง
+ *     description: ใช้สำหรับ Check-out โดยใช้ Booking ID หลังจาก Check-in
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจอง
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Check-out สำเร็จ
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: success
+ *               message: Check-out สำเร็จ
+ *               data:
+ *                 id: 1
+ *                 customerName: John Doe
+ *                 room: A101
+ *                 status: checked-out
+ *                 checkInTime: 2026-04-01T13:00:00Z
+ *                 checkOutTime: 2026-04-01T15:00:00Z
+ *       400:
+ *         description: ลูกค้ายังไม่ได้ Check-in
+ *       404:
+ *         description: ไม่พบข้อมูลการจอง
+ */
+
+// 👇 แก้ไขโดย: นางสาวฐิติกานต์ ประสิทธิ์
+app.post('/api/bookings/:id/checkout', (req, res) => {
+  const id = parseInt(req.params.id);
+  const booking = bookings.find(b => b.id === id);
+
+  if (!booking) {
+    return res.status(404).json({
+      status: "error",
+      message: "ไม่พบข้อมูลการจอง"
+    });
+  }
+
+  // ❗ ตรวจสอบว่าลูกค้าเคย Check-in หรือยัง
+  if (booking.status !== "checked-in") {
+    return res.status(400).json({
+      status: "error",
+      message: "ลูกค้ายังไม่ได้ Check-in หรือ Check-out ไปแล้ว"
+    });
+  }
+
+  // อัปเดตสถานะ
+  booking.status = "checked-out";
+  booking.checkOutTime = new Date();
+
+  res.json({
+    status: "success",
+    message: "Check-out สำเร็จ",
+    data: booking
+  });
+});
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
    บันทึก Code และ รูปผลการทำงาน
-   ```
+   ```  // POST /api/bookings/:id/confirmcheckout -> Confirm Check-Out
+/**
+ * @swagger
+ * /api/bookings/{id}/confirmcheckout:
+ *   post:
+ *     summary: ยืนยันการ Check-Out
+ *     description: ใช้สำหรับยืนยันว่าการ Check-Out เสร็จสมบูรณ์
+ *     tags: [Bookings]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID ของการจอง
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Confirm Check-Out สำเร็จ
+ *         content:
+ *           application/json:
+ *             example:
+ *               status: success
+ *               message: Confirm Check-Out สำเร็จ
+ *               data:
+ *                 id: 1
+ *                 customerName: John Doe
+ *                 room: A101
+ *                 status: checkout-confirmed
+ *                 checkInTime: "2026-04-01T13:00:00Z"
+ *                 checkOutTime: "2026-04-01T15:00:00Z"
+ *       400:
+ *         description: ลูกค้ายังไม่ได้ Check-Out หรือ Confirm แล้ว
+ *       404:
+ *         description: ไม่พบข้อมูลการจอง
+ */
+
+// 👇 แก้ไขโดย: นางสาวฐิติกานต์ ประสิทธิ์
+app.post('/api/bookings/:id/confirmcheckout', (req, res) => {
+  const id = parseInt(req.params.id);
+  const booking = bookings.find(b => b.id === id);
+
+  if (!booking) {
+    return res.status(404).json({
+      status: "error",
+      message: "ไม่พบข้อมูลการจอง"
+    });
+  }
+
+  // ❗ ตรวจสอบสถานะก่อน Confirm
+  if (booking.status !== "checked-out") {
+    return res.status(400).json({
+      status: "error",
+      message: "ลูกค้ายังไม่ได้ Check-Out หรือ Confirm แล้ว"
+    });
+  }
+
+  // อัปเดตสถานะเป็น Confirmed
+  booking.status = "checkout-confirmed";
+
+  res.json({
+    status: "success",
+    message: "Confirm Check-Out สำเร็จ",
+    data: booking
+  });
+});
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
@@ -1299,32 +1541,29 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+Swagger UI เน้นการแสดงเอกสาร API แบบโต้ตอบ (Interactive Documentation) และทดสอบเบื้องต้นผ่านหน้าเว็บ ส่วน Newman คือเครื่องมือ CLI สำหรับรัน Postman Collection แบบอัตโนมัติ (Automated Testing) ใช้ Swagger UI เพื่อดูเอกสารและลองเรียก API ง่ายๆ และใช้ Newman เมื่อต้องการรัน Test Case จำนวนมากใน CI/CD Pipeline
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+เป็นการอ้างอิงโครงสร้างข้อมูล (Schema) ที่นิยามไว้ใน OpenAPI/Swagger ไปใช้เพื่ออธิบายชนิดข้อมูลของ Parameter หรือ Return type ในโค้ด ช่วยให้ JSDoc เข้าใจรูปแบบ JSON object ที่ซับซ้อนโดยไม่ต้องเขียนรายละเอียดซ้ำ (inline) ทำให้โค้ดสะอาด ลดความซ้ำซ้อน และสร้าง API Document ได้ตรงกัน
 ```
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ iteration-count 5
+ผลที่ควรระวัง: การรันซ้ำหลายรอบอาจทำให้ข้อมูล mock หรือ database ถูกสร้างซ้ำหรือถูกแก้ไขหลายครั้ง จนอาจเกิดผลลัพธ์ไม่คาดคิด เช่น ID ซ้ำ ข้อมูลซ้ำ หรือ state ของระบบเปลี่ยนไป ดังนั้นควรแน่ใจว่า environment หรือ database ถูก reset ก่อนแต่ละรอบถ้าต้องการผลลัพธ์ที่ consistent
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ควรเขียน Swagger Documentation ก่อน Code API (Design-First) เพื่อกำหนดโครงสร้างที่ชัดเจน ลดความเข้าใจผิด และ รัน Newman (Postman CLI) ทันทีหลังการพัฒนาหรือปรับปรุง API ในขั้นตอน CI/CD เพื่อยืนยันความถูกต้องของ API อย่างอัตโนมัติ
 ```
 
 ---
