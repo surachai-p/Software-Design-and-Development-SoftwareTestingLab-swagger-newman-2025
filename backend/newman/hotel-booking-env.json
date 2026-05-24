@@ -1,0 +1,19 @@
+{
+  "id": "hotel-booking-local-env",
+  "name": "Hotel Booking - Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3005",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

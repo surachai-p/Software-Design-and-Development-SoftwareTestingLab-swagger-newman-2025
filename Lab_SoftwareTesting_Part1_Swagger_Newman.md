@@ -519,12 +519,12 @@ npm run dev
 4. **คัดลอก token** จาก Response body
 
 ```
-Response Code         : ______
-Token (15 ตัวแรก)     : ______________________________...
+Response Code         : 200
+Token (15 ตัวแรก)     : eyJhbGciOiJIUzI1...
 ```
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — POST /api/login Response ที่นี่
-![Swagger UI-POST /api/login response](images/swagger-UI-Response.png)
+![alt text](lab1.png)
 ---
 
 **ขั้นที่ 2 — ตั้งค่า Authorization**
@@ -539,14 +539,14 @@ Token (15 ตัวแรก)     : ______________________________...
 
 | Endpoint | Method | Auth | Expected Code | Actual Code |
 |----------|--------|:----:|:------------:|:-----------:|
-| `/api/bookings` | POST | ❌ | 201 | |
-| `/api/bookings` | GET | ✅ | 200 | |
-| `/api/bookings/1` | GET | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404 | |
-| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |
+| `/api/bookings` | POST | ❌ | 201 | |201
+| `/api/bookings` | GET | ✅ | 200 | |200
+| `/api/bookings/1` | GET | ✅ | 200 หรือ 404 | |200
+| `/api/bookings/1` | PUT | ✅ | 200 หรือ 404 | |200
+| `/api/bookings/1` | DELETE | ✅ | 200 หรือ 404 | |200
 
 ### 📸 แทรกภาพหน้าจอ Swagger UI — GET /api/bookings Response ที่นี่
-![Swagger UI-POST /api/bookings response]('images/swagger-UI-Response.png')
+![lab2](lab2.png)
 ---
 
 **ขั้นที่ 4 — ทดสอบกรณีไม่มี Token**
@@ -554,8 +554,8 @@ Token (15 ตัวแรก)     : ______________________________...
 กดปุ่ม **Authorize** → **Logout** → **Close** แล้วลอง GET /api/bookings ใหม่:
 
 ```
-Response Code เมื่อไม่มี Token : ______
-Error message ที่ได้รับ        : ______________________________
+Response Code เมื่อไม่มี Token : 401
+Error message ที่ได้รับ        : ต้องเข้าสู่ระบบก่อน
 ```
 
 ---
@@ -614,7 +614,7 @@ LoginResponse: {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง Schema `LoginResponse` ใน Models section:
-![Swagger UI-POST LoginResponse](images/swagger-UI-Response.png)
+![lab3.png](lab3.png)
 > ___
 
 ---
@@ -653,7 +653,7 @@ app.get('/api/health', (req, res) => {
 ```
 
 📸 แทรกภาพหน้าจอ Swagger UI ที่แสดง /api/health endpoint และ Response จริง:
-![Swagger UI-health check](images/swagger-UI-Response.png)
+![alt text](lab4.png)
 > ___
 
 ---
@@ -670,9 +670,10 @@ app.get('/api/health', (req, res) => {
 Login ใน Swagger UI → Authorize → รอ 6 วินาที → ลอง GET /api/bookings:
 
 ```
-Response Code หลัง token หมดอายุ : ______
-Error message                    : ______________________________
-ข้อแตกต่างระหว่าง 401 กับ 403   : ______________________________
+Response Code หลัง token หมดอายุ : __401____
+Error message                    : {"error": "Token หมดอายุ (jwt expired)"}
+ข้อแตกต่างระหว่าง 401 กับ 403   : 401 (Unauthorized): ระบบไม่รู้จักตัวตน (บัตรหมดอายุ, ใส่รหัสผิด หรือไม่ได้ Login)
+403 (Forbidden): ระบบรู้จักแล้ว แต่ "ไม่มีสิทธิ์" เข้าถึงข้อมูลนี้ (มีบัตรเข้าตึกได้ แต่ไม่มีสิทธิ์เปิดประตูห้องนี้)
 ```
 
 > แก้กลับเป็น `'1h'` ก่อนทำส่วนที่ 2
@@ -1122,20 +1123,19 @@ npx newman run newman/hotel-booking-collection.json \
 **บันทึกผลการรัน Newman:**
 
 ```
-Collection Name    : ______________________________
-Total Requests     : ______________________________
-Total Assertions   : ______________________________
-Passed             : ______________________________
-Failed             : ______________________________
-Duration           : ______________________________
-Average Resp. Time : ______________________________ ms
+Collection Name    : Hotel Booking API Tests
+Total Requests     : 4
+Total Assertions   : 4
+Passed             : 4
+Failed             : 0
+Duration           : 528 ms
+Average Resp. Time : 26 ms
 ```
 
-![หน้าจอ Newman Terminal Output]('images/Newman Terminal.png')
+![lab5.png](lab5.png)
 ### 📸 แทรกภาพหน้าจอ newman-reporter-htmlextra Report (ไฟล์ api-test-report.html)  ที่นี่
 
-![หน้าจอ Newman Report]('images/Newman Report.png')
-
+![alt text](lab6.png)
 ---
 
 ### 🔧 แบบฝึกหัดที่ 2 — แก้ไขและทดลอง Newman Collection
@@ -1176,7 +1176,7 @@ npx newman run newman/hotel-booking-collection.json \
 
 📸 ตรวจสอบหน้า Report แทรกภาพหน้าจอที่เห็นชื่อนักศึกษา:
 
-![หน้าจอ Newman Report ที่แก้ไขข้อมูลแล้ว]('images/Newman report-edit.png')
+![alt text](2.1.png)
 
 > ___
 
@@ -1201,7 +1201,7 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 บันทึกผล:
 📸 หน้าจอผล Error:
 
-![หน้าจอ Newman Error]('images/Newman Error.png')
+![alt text](2.2.png)
 
 
 > 💡 **จุดประสงค์:** Environment Variable `baseUrl` ส่งผลต่อทุก Request — นี่คือเหตุผลที่ต้องใช้ตัวแปรแทนการพิมพ์ URL ซ้ำ
@@ -1228,8 +1228,8 @@ npx newman run newman/hotel-booking-collection.json -e newman/hotel-booking-env.
 ```
 
 ```
-Assertions ก่อนเพิ่ม : ______
-Assertions หลังเพิ่ม : ______
+Assertions ก่อนเพิ่ม : 4
+Assertions หลังเพิ่ม : 3
 ```
 
 ---
@@ -1259,7 +1259,7 @@ Assertions หลังเพิ่ม : ______
 ```
 
 📸 แทรกภาพหน้าจอ Newman ที่แสดง Request 8 ผ่าน (Pass):
-
+![alt text](2.4.png)
 > ___
 
 ---
@@ -1270,26 +1270,73 @@ Assertions หลังเพิ่ม : ______
 1. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckIn โดยมีการระบุ ID ของการจอง เพื่อใช้ CheckIn และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่ง Response ผลการ CheckIn กลับไป (นักศึกษาออกแบบ API ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+   // ==========================================
+// แบบทดสอบ ข้อ 1: API สำหรับ CheckIn 
+// สร้างโดย [สุณัฐชา] [68030298]
+// ==========================================
+app.post('/api/checkin/:bookingId', (req, res) => {
+    const { bookingId } = req.params;
+    res.status(200).json({
+        message: "Check-in successful",
+        checkInId: "CI-68030298-" + Math.floor(Math.random() * 1000),
+        bookingId: bookingId,
+        status: "Checked In",
+        checkInTime: new Date().toISOString(),
+        staff: "สุณัฐชา (68030298)"
+    });
+});![alt text](quiz1.png)
    ```
    
 2. สร้าง API เพิ่มเติม เพื่อรองรับการ CheckOut โดยมีการระบ ID ของการ CheckIn เพื่อใช้ทำการ CheckOut และใช้การจำลองข้อมูล JSON (ทำ Mockup) เพื่อส่งรายละเอียดของการ CheckOut กลับไป (นักศึกษาออกแบบ API และ JSON ของตนเอง และให้เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
    ```
    บันทึก Code และ รูปผลการทำงาน
+   // ==========================================
+// แบบทดสอบ ข้อ 2: API สำหรับ CheckOut 
+// สร้างโดย สุณัฐชา (68030298)
+// ==========================================
+app.post('/api/checkout/:checkInId', (req, res) => {
+    const { checkInId } = req.params;
+    res.status(200).json({
+        message: "Check-out summary generated",
+        checkInId: checkInId,
+        roomCharge: 2000,
+        serviceCharge: 500,
+        totalAmount: 2500,
+        status: "Pending Confirmation",
+        processedBy: "สุณัฐชา (68030298)"
+    });
+});
    ```
    
 3. สร้าง API เพิ่มเติม เพื่อรองรับการ ConfirmCheckOut (เพิ่ม Comment ใน Code ให้ใส่ชื่อ และรหัสนักศึกษาเพื่อระบุว่าแก้ไขโดยใคร)
 
    ```
    บันทึก Code และ รูปผลการทำงาน
+   // ==========================================
+// แบบทดสอบ ข้อ 3: API สำหรับ ConfirmCheckOut 
+// สร้างโดย [สุณัฐชา] [68030298]
+// ==========================================
+app.post('/api/confirm-checkout', (req, res) => {
+    res.status(200).json({
+        message: "Check-out confirmed",
+        paymentStatus: "Paid",
+        receiptNo: "RCP-68030298-" + Date.now(),
+        status: "Closed",
+        confirmedBy: "สุณัฐชา (68030298)"
+    });
+});![alt text](quiz3.png)
    ```
       
 4. แก้ไข Swagger และ Newman เพื่อทดสอบการทำงาน
    ```
    บันทึกรูปผลการทำงานของ Swagger
+
+   ![alt text](quiz4.1.png)
    ```
    
    ```
    บันทึกรูปผลการทำงานของ newman
+   ![alt text](quiz4.2.png)
    ```
    
 
@@ -1299,32 +1346,35 @@ Assertions หลังเพิ่ม : ______
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+Swagger UI: เป็นเครื่องมือทดสอบแบบ Manual (ทำด้วยมือ) ผ่านหน้าเว็บ มีไว้ให้ผู้พัฒนาดูโครงสร้าง API และกดลองเรียกใช้ดูทีละตัว (Exploratory Testing) เหมาะสำหรับใช้ระหว่างเขียนโค้ดเพื่อเช็คว่า API นั้นๆ ใช้งานได้เบื้องต้นหรือไม่
+
+Newman: เป็นเครื่องมือทดสอบแบบ Automated (อัตโนมัติ) ผ่าน Command Line สามารถรันชุดทดสอบทั้งหมดได้ในครั้งเดียว เหมาะสำหรับใช้ทำ Regression Testing หรือรันในระบบ CI/CD เพื่อตรวจสอบว่าการแก้ไขโค้ดใหม่ไม่ได้ไปทำลายฟีเจอร์เก่าที่เคยใช้งานได้
+
 ```
 
 **ข้อ 2.** `$ref: '#/components/schemas/Booking'` ใน JSDoc Comment หมายความว่าอะไร มีประโยชน์อย่างไรเมื่อเทียบกับการเขียน schema inline?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ความหมาย: คือการอ้างอิง (Reference) ไปยังโครงสร้างข้อมูล (Schema) ที่ชื่อว่า "Booking" ซึ่งนิยามไว้ที่ส่วนกลางของไฟล์
+
+ประโยชน์: ช่วยให้โค้ดสะอาดและลดความซ้ำซ้อน (Don't Repeat Yourself) หากมีการแก้ไขโครงสร้าง Booking เราแก้ไขแค่ที่เดียวก็จะอัปเดตให้ทุก API ที่เรียกใช้อัตโนมัติ ต่างจากการเขียน Inline ที่ต้องไล่แก้ไขตามทุกจุด ซึ่งเสี่ยงต่อการผิดพลาด
 ```
 
 
 **ข้อ 3.** ถ้าต้องการให้ Newman รัน Collection ซ้ำ 5 รอบ จะเพิ่ม flag อะไรในคำสั่ง และผลลัพธ์ที่ควรระวังคืออะไร?
 
 ```
-คำตอบ: flag ที่ใช้คือ ______
-ผลที่ควรระวัง: _______________________________________________
+คำตอบ: flag ที่ใช้คือ flag ที่ใช้คือ -n 5 (หรือ --iteration-count 5)
+ผลที่ควรระวัง: ข้อมูลที่เกิดจากการทดสอบอาจจะ "ซ้ำ" (Duplicate) หรือเกิดข้อผิดพลาดหาก API ไม่รองรับการทำงานซ้ำๆ (เช่น การสมัครสมาชิกด้วย Email เดิมซ้ำ 5 รอบ ซึ่งรอบที่ 2-5 จะ Error 400 เพราะข้อมูลซ้ำในฐานข้อมูล)
 ```
 
 **ข้อ 4.** จากการทดลองในใบงานนี้ นักศึกษามองว่าควรเขียน Swagger Documentation ก่อนหรือหลัง Code API และ Newman ควรรันเมื่อไหร่ในกระบวนการพัฒนา?
 
 ```
 คำตอบ:
-__________________________________________________________________
-__________________________________________________________________
+ควรเขียน Swagger Documentation ก่อนหรือพร้อมๆ กับการเขียนโค้ด (API-First Approach) เพื่อเป็นข้อตกลง (Contract) ที่ชัดเจนระหว่างคนทำ Front-end และ Back-end
+ส่วน Newman ควรรันทุกครั้งที่มีการเปลี่ยนแปลงโค้ด และรันก่อนที่จะส่งมอบงาน (Deployment) เพื่อเป็นการ Re-check ว่า API ทั้งหมดในระบบยังคงทำงานได้ถูกต้อง 100% ตามข้อกำหนดครับ
 ```
 
 ---
